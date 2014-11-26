@@ -1,7 +1,6 @@
 var core = require('./core'),
   server = require('./server');
 
-//core.init();
-//core.update();
+core.init();
 
 server.init();

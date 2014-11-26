@@ -1,0 +1,70 @@
+var q = require('q'),
+  database = require('./database');
+
+function processCollection (client, collection) {
+  var deferred = q.defer();
+
+  // Get collection in database
+  database.Collection
+    .synchronize(collection)
+    .then(function () {
+      return q.all(collection.set.map(function (set) {
+        // Create photosets
+        return database.PhotoSet.synchronize(set);
+      }));
+    })
+    .then(function (data) {
+      // Read photos for each photoset
+      return q.all(data.map(function (set) {
+        return q.ninvoke(
+            client,
+            'executeAPIRequest',
+            'flickr.photosets.getPhotos',
+            {
+              'photoset_id': set.orig_id,
+              'extras': 'tags, media, url_sq, url_t, url_s, url_m, url_o',
+              'per_page': 9999
+            },
+            true
+          )
+          // Write each photo in database
+          .then(function (data) {
+            return q.all(data.photoset.photo.map(function (photo) {
+              return database.Photo.synchronize(photo);
+            }));
+          });
+      }));
+    })
+    .then(function (photos) {
+      deferred.resolve('done');
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+
+  return deferred.promise;
+}
+
+module.exports = function (client) {
+  var deferred = q.defer(),
+    collections = [];
+
+  // Get collections
+  q.ninvoke(
+      client,
+      'executeAPIRequest',
+      'flickr.collections.getTree',
+      {},
+      true
+    )
+    .then(function (res) {
+      return q.all(res.collections.collection.map(function (collection) {
+        return processCollection(client, collection);
+      }));
+    })
+    .catch (function (error) {
+      console.error(error);
+    });
+
+  return deferred.promise;
+};

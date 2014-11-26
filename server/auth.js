@@ -1,6 +1,8 @@
-var passport = require('passport'),
+var q = require('q'),
+  passport = require('passport'),
   FlickrStrategy = require('passport-flickr').Strategy,
-  config = require('../config.json');
+  config = require('../config.json'),
+  database = require('../core/database');
 
 passport.use(new FlickrStrategy({
     consumerKey: config.API_KEY,
@@ -8,11 +10,25 @@ passport.use(new FlickrStrategy({
     callbackURL: config.host + '/auth/callback'
   },
   function(token, tokenSecret, profile, done) {
-    if (profile.id === config.userId) {
-      done(null, profile);
-    } else {
-      done('Wrong user');
-    }
+    database.Config.get('userId')
+      .then(function (value) {
+        if (!value) {
+          initConfig(token, tokenSecret, profile)
+            .then(function () {
+              done(null, profile);
+              require('../core').init();
+            });
+          } else {
+            if (profile.id === value) {
+              done(null, profile);
+            } else {
+              done('Wrong user');
+            }
+          }
+      })
+      .catch (function (err) {
+        console.error(err);
+      });
   }
 ));
 
@@ -39,8 +55,17 @@ function init (app) {
     });
 }
 
+function initConfig (token, tokenSecret, profile) {
+  return database.Config.set({
+      token: token,
+      tokenSecret: tokenSecret,
+      userId: profile.id,
+      userFullName: profile.fullName,
+      userDisplayName: profile.displayName
+    });
+}
+
 init.middleware = function (req, res, next) {
-  console.log(req.user);
   if (req.user) {
     next();
   } else {

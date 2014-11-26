@@ -1,20 +1,25 @@
-var client;
+var database = require('./database'),
+  sync = require('./sync'),
+  client;
 
-function update () {
-  client.executeAPIRequest('flickr.photos.search', {
-    text: "soccer",
-    media: "photos",
-    per_page: 25,
-    page: 1,
-    extras: "url_q, url_z, url_b, owner_name"
-  }, false, function (error, result) {
-    console.log(error, result);
-  });
-}
-
-module.exports = {
+var core = {
+  database: null,
   init: function () {
-    client = require('./flickr');
-  },
-  update: update
+    return database.init()
+      .then(function (database) {
+        core.database = database;
+        return require('./flickr').client(database);
+      })
+      .then(function (data) {
+        client = data;
+        return sync(client);
+      })
+      .then(function () {
+        console.log('Sync is done!');
+      })
+      .catch (function (err) {
+        console.error(err);
+      });
+  }
 };
+module.exports = core;
