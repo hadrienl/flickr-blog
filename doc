@@ -1,0 +1,25 @@
+## Classeurs
+
+Liste des classeurs avec leurs listes d'albums avec classeur id optionnel. Permet de lister les classeurs disponibles lors du choix du classeur lié au blog. Puis de lire régulièrement les albums du classeur.
+
+  https://www.flickr.com/services/api/explore/flickr.collections.getTree
+
+## Albums
+
+### Infos
+
+  Affiche les infos d'un album (titre, description)
+
+* photoset_id: `72157649416318032`
+
+  https://www.flickr.com/services/api/explore/flickr.photosets.getInfo
+
+### Photos
+
+Récupère les photos d'un album.
+
+* photoset_id: `72157649416318032`
+* extras: `tags, media, url_sq, url_t, url_s, url_m, url_o`
+* per_page: `9999`
+
+   https://www.flickr.com/services/api/explore/flickr.photosets.getPhotos
