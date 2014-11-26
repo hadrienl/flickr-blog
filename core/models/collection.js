@@ -19,13 +19,12 @@ module.exports = function (sequelize) {
           return deferred.reject(err);
         }
         if (!collection) {
-          collection = Collection.build({
-            orig_id: raw.id,
-            title: raw.title,
-            description: raw.description,
-            iconlarge: raw.iconlarge
-          });
+          collection = Collection.build();
         }
+        collection.orig_id = raw.id;
+        collection.title = raw.title;
+        collection.description = raw.description;
+        collection.iconlarge = raw.iconlarg;
         collection.save()
         .complete(function (err, collection) {
           if (err) {

@@ -12,6 +12,7 @@ var core = {
       })
       .then(function (data) {
         client = data;
+        console.log('Start Flickr sync');
         return sync(client);
       })
       .then(function () {
@@ -20,6 +21,7 @@ var core = {
       .catch (function (err) {
         console.error(err);
       });
-  }
+  },
+  client: client
 };
 module.exports = core;

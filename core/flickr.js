@@ -9,7 +9,7 @@ module.exports = {
     database.Config.get('token')
       .then(function (data) {
         if (!data) {
-          return deferred.reject('No token');
+          return deferred.reject('App is not well configured and cannot sync. Please go to /settings');
         }
         token = data;
         return database.Config.get('tokenSecret');

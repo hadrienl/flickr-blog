@@ -24,17 +24,16 @@ module.exports = function (sequelize) {
           return deferred.reject(err);
         }
         if (!photo) {
-          photo = Photo.build({
-            orig_id: raw.id,
-            title: raw.title,
-            tags: raw.tags,
-            url_sq: raw.url_sq,
-            url_t: raw.url_t,
-            url_s: raw.url_s,
-            url_m: raw.url_m,
-            url_o: raw.url_o
-          });
+          photo = Photo.build();
         }
+        photo.orig_id = raw.id;
+        photo.title = raw.title;
+        photo.tags = raw.tags;
+        photo.url_sq = raw.url_sq;
+        photo.url_t = raw.url_t;
+        photo.url_s = raw.url_s;
+        photo.url_m = raw.url_m;
+        photo.url_o = raw.url_;
         photo.save()
         .complete(function (err, photo) {
           if (err) {

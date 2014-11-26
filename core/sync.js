@@ -10,7 +10,24 @@ function processCollection (client, collection) {
     .then(function () {
       return q.all(collection.set.map(function (set) {
         // Create photosets
-        return database.PhotoSet.synchronize(set);
+        return q.ninvoke(
+            client,
+            'executeAPIRequest',
+            'flickr.photosets.getInfo',
+            {
+              'photoset_id': set.id
+            },
+            true
+          )
+        .then(function (data) {
+          return database.PhotoSet.synchronize({
+            id: data.photoset.id,
+            title: data.photoset.title._content,
+            description: data.photoset.description._content,
+            date_create: data.photoset.date_create,
+            date_update: data.photoset.date_update
+          });
+        });
       }));
     })
     .then(function (data) {
