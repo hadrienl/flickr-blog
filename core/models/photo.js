@@ -25,33 +25,39 @@ module.exports = function (sequelize) {
         if (err) {
           return deferred.reject(err);
         }
-        if (!photo) {
+
+        try {
+          if (!photo) {
+            throw 'Photo does not exist';
+          }
+          deferred.resolve(photo);
+        } catch (e) {
           photo = Photo.build();
+          photo.photoset_id = data.id;
+          photo.orig_id = data.id;
+          photo.title = data.title;
+          photo.tags = data.tags;
+          photo.url_sq = data.url_sq;
+          photo.url_t = data.url_t;
+          photo.url_s = data.url_s;
+          photo.url_m = data.url_m;
+          photo.url_o = data.url_o;
+          photo.is_primary = !!data.isprimary;
+          photo.save()
+          .complete(function (err, photo) {
+            if (err) {
+              return deferred.reject(err);
+            }
+            photoEntity = photo;
+            return set.addPhoto(photoEntity);
+          })
+          .complete(function (err, photo) {
+            if (err) {
+              return deferred.reject(err);
+            }
+            deferred.resolve(photoEntity);
+          });
         }
-        photo.photoset_id = data.id;
-        photo.orig_id = data.id;
-        photo.title = data.title;
-        photo.tags = data.tags;
-        photo.url_sq = data.url_sq;
-        photo.url_t = data.url_t;
-        photo.url_s = data.url_s;
-        photo.url_m = data.url_m;
-        photo.url_o = data.url_o;
-        photo.is_primary = !!data.isprimary;
-        photo.save()
-        .complete(function (err, photo) {
-          if (err) {
-            return deferred.reject(err);
-          }
-          photoEntity = photo;
-          return set.addPhoto(photoEntity);
-        })
-        .complete(function (err, photo) {
-          if (err) {
-            return deferred.reject(err);
-          }
-          deferred.resolve(photoEntity);
-        });
       });
 
     return deferred.promise;

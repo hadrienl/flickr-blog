@@ -18,20 +18,25 @@ module.exports = function (sequelize) {
         if (err) {
           return deferred.reject(err);
         }
-        if (!collection) {
-          collection = Collection.build();
-        }
-        collection.orig_id = data.id;
-        collection.title = data.title;
-        collection.description = data.description;
-        collection.iconlarge = data.iconlarg;
-        collection.save()
-        .complete(function (err, collection) {
-          if (err) {
-            return deferred.reject(err);
+        try {
+          if (!collection) {
+            throw 'Collection does not exist';
           }
           deferred.resolve(collection);
-        });
+        } catch (e) {
+          collection = Collection.build();
+          collection.orig_id = data.id;
+          collection.title = data.title;
+          collection.description = data.description;
+          collection.iconlarge = data.iconlarg;
+          collection.save()
+          .complete(function (err, collection) {
+            if (err) {
+              return deferred.reject(err);
+            }
+            deferred.resolve(collection);
+          });
+        }
       });
 
     return deferred.promise;

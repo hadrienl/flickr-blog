@@ -22,29 +22,42 @@ module.exports = function (sequelize) {
         if (err) {
           return deferred.reject(err);
         }
-        if (!photoset) {
-          photoset = PhotoSet.build();
-        }
 
         extractDateFromTitle(data);
+        data.description = entities.decode(getString(data.description));
+        data.title = getString(data.title);
 
-        photoset.orig_id = data.id;
-        photoset.title = getString(data.title);
-        photoset.slug = slugify(data.title);
-        photoset.description = entities.decode(getString(data.description));
-        photoset.date_create = data.date_create;
-        photoset.date_update = data.date_update;
-        photoset.save()
-        .then(function (photoset) {
-          photosetEntity = photoset;
-          return collection.addPhotoSet(photoset);
-        })
-        .then(function (data) {
-          deferred.resolve(photosetEntity);
-        })
-        .catch(function (err) {
-          return deferred.reject(err);
-        });
+        try {
+          if (!photoset) {
+            throw 'photoset does not exist';
+          }
+          if (photoset.title !== data.title ||
+              photoset.description !== data.description ||
+              +photoset.date_create !== +data.date_create) {
+            throw 'photoset had changed';
+          }
+          deferred.resolve(photoset);
+        } catch(e) {
+          photoset = PhotoSet.build();
+
+          photoset.orig_id = data.id;
+          photoset.title = data.title;
+          photoset.slug = slugify(data.title);
+          photoset.description = data.description;
+          photoset.date_create = data.date_create;
+          photoset.date_update = data.date_update;
+          photoset.save()
+          .then(function (photoset) {
+            photosetEntity = photoset;
+            return collection.addPhotoSet(photoset);
+          })
+          .then(function (data) {
+            deferred.resolve(photosetEntity);
+          })
+          .catch(function (err) {
+            return deferred.reject(err);
+          });
+        }
       });
 
     return deferred.promise;
