@@ -61,18 +61,15 @@ module.exports = function (sequelize) {
         photoset.date_create = data.date_create;
         photoset.date_update = data.date_update;
         photoset.save()
-        .complete(function (err, photoset) {
-          if (err) {
-            return deferred.reject(err);
-          }
+        .then(function (photoset) {
           photosetEntity = photoset;
           return collection.addPhotoSet(photoset);
         })
-        .complete(function (err, data) {
-          if (err) {
-            return deferred.reject(err);
-          }
+        .then(function (data) {
           deferred.resolve(photosetEntity);
+        })
+        .catch(function (err) {
+          return deferred.reject(err);
         });
       });
 
@@ -81,7 +78,7 @@ module.exports = function (sequelize) {
 
   PhotoSet.getAllWithPrimaryPhoto = function () {
     var deferred = q.defer(),
-      photosetsData;
+      photosetsData = [];
 
     PhotoSet
       .findAll({
@@ -90,26 +87,30 @@ module.exports = function (sequelize) {
         order: 'date_create DESC'
       })
       .then(function (photosets) {
-        photosetsData = photosets.map(function (photoset) {
-          return photoset.dataValues;
-        });
-        deferred.resolve(photosetsData);
+        return q.all(photosets.map(function (photoset) {
+          var deferred = q.defer(),
+            photosetData = photoset.dataValues;
 
-        /*return q.all(photosets.map(function (photoset) {
-          return sequelize.models.Photo.getPhotoSetThumb(photoset.id);
-        }));*/
+          photoset.getPhotos({
+            where: {
+                is_primary: true
+              }
+            })
+            .then(function (data) {
+              if (data) {
+                photosetData.primary = data[0].dataValues;
+              }
+              photosetsData.push(photosetData);
+
+              deferred.resolve(photosetsData);
+            });
+
+          return deferred.promise;
+        }));
       })
-      /*.then(function (photos) {
-        photos.forEach(function (photo) {
-          photosetsData.some(function (photoset) {
-            if (photo.photoset_id === photoset.id) {
-              photoset.primary = photo;
-              return true;
-            }
-          });
-        });
+      .then(function () {
         deferred.resolve(photosetsData);
-      })*/
+      })
       .catch(function (err) {
         deferred.reject(err);
       });
