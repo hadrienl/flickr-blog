@@ -4,16 +4,18 @@
 <div>
   <header class="row">
     <h1
-      class="columns">Flickr Blog</h1>
+      class="columns">
+      <a href="/">Flickr Blog</a>
+    </h1>
   </header>
+  {% if !photosets.length %}
+  <div
+    class="column">
+    <p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
+  </div>
+  {% else %}
   <div
     class="row">
-    {% if !photosets.length %}
-    <div
-      class="column">
-      <p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
-    </div>
-    {% else %}
     {% for photoset in photosets %}
     <article
       class="column large-4">
@@ -38,7 +40,26 @@
       </div>
     </article>
     {% endfor %}
+  </div>
+  <div
+    class="row pagination">
+    {% if page - 1 > 0 %}
+    <div class="column large-4">
+      {% if page - 1 == 1 %}
+      <a href="/">Previous</a>
+      {% else %}
+      <a href="/page-{{ +page - 1 }}">Previous</a>
+      {% endif %}
+    </div>
     {% endif %}
-    {% endblock %}
+    <div class="column large-4 right">
+      {% if page * perPage < count %}
+      <a href="/page-{{ +page + 1 }}">Next</a>
+      {% endif %}
+    </div>
+  </div>
+
+    {% endif %}
   </div>
 </div>
+{% endblock %}

@@ -2,15 +2,9 @@ var database = require('../core/database'),
   PhotoSet = require('./viewModels/photoset.js');
 
 module.exports = function (app) {
-  app.get('/', function (req, res) {
-    PhotoSet
-      .getAllWithPrimaryPhoto()
-      .then(function (photosets) {
-        res.render('home', {
-          photosets: photosets
-        });
-      });
-  });
+  var photosets;
+  app.get('/', home);
+  app.get('/page-:page', home);
   app.get(/^\/([0-9]{4})\/([0-9]{2})\/([^\/]+)\.html/, function (req, res, next) {
     var year = +req.params[0],
       month = +req.params[1],
@@ -44,3 +38,26 @@ module.exports = function (app) {
       });
   });
 };
+
+function home (req, res) {
+  var page = req.params.page || 1,
+    perPage = 10;
+
+  PhotoSet
+    .getAllWithPrimaryPhoto({
+      page: page,
+      perPage: perPage
+    })
+    .then(function (data) {
+      photosets = data;
+      return PhotoSet.count();
+    })
+    .then(function (count) {
+      res.render('home', {
+        photosets: photosets,
+        count: count,
+        page: page,
+        perPage: perPage
+      });
+    });
+}

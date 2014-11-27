@@ -32,16 +32,37 @@ PhotoSet.prototype.getPhotos = function () {
   return deferred.promise;
 };
 
-PhotoSet.getAllWithPrimaryPhoto = function (page) {
+PhotoSet.count = function () {
+  var deferred = q.defer();
+
+  database
+    .models
+    .PhotoSet
+    .count()
+    .then(function (count) {
+      deferred.resolve(count);
+    })
+    .catch(function (err) {
+      deferred.reject(err);
+    });
+
+  return deferred.promise;
+};
+
+PhotoSet.getAllWithPrimaryPhoto = function (config) {
   var deferred = q.defer(),
     photosetsData = [];
+
+  config = config || {};
+  config.perPage = config.perPage || 10;
+  config.page = config.page || 1;
 
   database
     .models
     .PhotoSet
     .findAll({
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: config.perPage,
+      offset: (config.page - 1) * config.perPage,
       order: 'date_create DESC'
     })
     .then(function (photosets) {
