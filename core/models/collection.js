@@ -9,11 +9,11 @@ module.exports = function (sequelize) {
     iconlarge: Sequelize.STRING
   });
 
-  Collection.synchronize = function (raw) {
+  Collection.saveFromFlickr = function (data) {
     var deferred = q.defer();
 
     Collection
-      .find({ where: {orig_id: raw.id } })
+      .find({ where: {orig_id: data.id } })
       .complete(function (err, collection) {
         if (err) {
           return deferred.reject(err);
@@ -21,10 +21,10 @@ module.exports = function (sequelize) {
         if (!collection) {
           collection = Collection.build();
         }
-        collection.orig_id = raw.id;
-        collection.title = raw.title;
-        collection.description = raw.description;
-        collection.iconlarge = raw.iconlarg;
+        collection.orig_id = data.id;
+        collection.title = data.title;
+        collection.description = data.description;
+        collection.iconlarge = data.iconlarg;
         collection.save()
         .complete(function (err, collection) {
           if (err) {

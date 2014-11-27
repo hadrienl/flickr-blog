@@ -1,6 +1,7 @@
 var database = require('./database'),
   sync = require('./sync'),
-  client;
+  client,
+  syncLoop;
 
 var core = {
   database: null,
@@ -12,14 +13,18 @@ var core = {
       })
       .then(function (data) {
         client = data;
-        console.log('Start Flickr sync');
-        return sync(client);
-      })
-      .then(function () {
-        console.log('Sync is done!');
-      })
-      .catch (function (err) {
-        console.error(err);
+        if (syncLoop) {
+          cancelInterval(syncLoop);
+        }
+        function startSync() {
+          console.error('Start Flickr Sync');
+          sync(client)
+            .then (function () {
+              console.error('Sync is done!');
+            });
+        }
+        syncLoop = setInterval(startSync, 5*60*1000);
+        startSync();
       });
   },
   client: client
