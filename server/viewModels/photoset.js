@@ -88,6 +88,15 @@ PhotoSet.getAllWithPrimaryPhoto = function (config) {
       }));
     })
     .then(function () {
+      photosetsData.sort(function (a, b) {
+        if (a.date_create < b.date_create) {
+          return 1;
+        } else if (a.date_create > b.date_create) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
       deferred.resolve(photosetsData);
     })
     .catch(function (err) {
