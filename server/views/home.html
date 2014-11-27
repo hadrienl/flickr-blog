@@ -7,5 +7,8 @@
   {{ photoset.title }}
 </h2>
 <p>{{ photoset.date_create|date('jS \o\f F') }}</p>
+<div>
+  {{ photoset.description | markdown | raw }}
+</div>
 {% endfor %}
 {% endif %}

@@ -25,8 +25,8 @@ module.exports = function (sequelize) {
         photoset.orig_id = raw.id;
         photoset.title = raw.title;
         photoset.description = raw.description;
-        photoset.date_create = raw.date_create;
-        photoset.date_update = raw.date_update;
+        photoset.date_create = new Date(raw.date_create*1000);
+        photoset.date_update = new Date(raw.date_update*1000);
         photoset.save()
         .complete(function (err, photoset) {
           if (err) {

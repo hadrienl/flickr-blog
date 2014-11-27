@@ -1,7 +1,7 @@
 var express = require('express'),
   session = require('express-session'),
   app = express(),
-  swig = require('swig');
+  swig = require('./swig');
 
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
