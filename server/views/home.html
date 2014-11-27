@@ -1,3 +1,6 @@
+{% extends 'index.html' %}
+
+{% block body %}
 <h1>Flickr Blog</h1>
 {% if !photosets.length %}
 <p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
@@ -15,3 +18,4 @@
 </div>
 {% endfor %}
 {% endif %}
+{% endblock %}
