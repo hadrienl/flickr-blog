@@ -13,9 +13,10 @@ module.exports = function (app) {
           });
       })
       .then(function (photosets) {
-        //console.error(photosets);
         res.render('home', {
-          photosets: photosets
+          photosets: photosets.map(function (photoset) {
+            return photoset.dataValues;
+          })
         });
       });
   });

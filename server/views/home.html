@@ -2,11 +2,10 @@
 {% if !photosets.length %}
 <p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
 {% else %}
-<ul>
-  {% for photoset in photosets %}
-  <li>
-    {{ photoset.title }}
-  </li>
-  {% endfor %}
-</ul>
+{% for photoset in photosets %}
+<h2>
+  {{ photoset.title }}
+</h2>
+<p>{{ photoset.date_create|date('jS \o\f F') }}</p>
+{% endfor %}
 {% endif %}
