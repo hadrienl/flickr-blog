@@ -1,6 +1,13 @@
 var express = require('express'),
   session = require('express-session'),
-  app = express();
+  app = express(),
+  swig = require('swig');
+
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+app.set('view cache', false);
+swig.setDefaults({ cache: false });
 
 app.use(session({
   secret: 'erkjfh earkfghleirzgh erzklhg rejlh gkjerzh gkjerh rgkherzegh t gt',

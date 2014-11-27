@@ -7,10 +7,24 @@ var q = require('q'),
   }),
   database = {
     init: init
-  };
+  },
+  modelsDeferred = q.defer();
+
+Object.defineProperty(database, 'models', {
+  get: function () {
+    return modelsDeferred.promise;
+  }
+});
 
 function init () {
   var deferred = q.defer();
+
+  database.Collection = require('./models/collection.js')(sequelize);
+  database.PhotoSet = require('./models/photoset.js')(sequelize);
+  database.Photo = require('./models/photo.js')(sequelize);
+  database.Config = require('./models/config.js')(sequelize);
+
+  modelsDeferred.resolve(sequelize.models);
 
   sequelize
     .authenticate()
@@ -35,11 +49,6 @@ function init () {
 function migrate (sequelize) {
   var deferred = q.defer();
 
-  database.Collection = require('./models/collection.js')(sequelize);
-  database.PhotoSet = require('./models/photoset.js')(sequelize);
-  database.Photo = require('./models/photo.js')(sequelize);
-  database.Config = require('./models/config.js')(sequelize);
-
   sequelize
     .sync()
     .complete(function (err, data) {
@@ -52,6 +61,5 @@ function migrate (sequelize) {
 
   return deferred.promise;
 }
-
 
 module.exports = database;
