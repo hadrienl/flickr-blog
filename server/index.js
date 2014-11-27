@@ -19,6 +19,8 @@ require('./auth')(app);
 require('./blog')(app);
 require('./settings')(app);
 
+app.use(express.static(__dirname + '/../bower_components'));
+
 function init () {
   var server = app.listen(3000, function () {
     var host = server.address().address;
