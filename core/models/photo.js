@@ -3,7 +3,6 @@ var Sequelize = require('sequelize'),
 
 module.exports = function (sequelize) {
   var Photo = sequelize.define('Photo', {
-    photoset_id: Sequelize.INTEGER,
     orig_id: Sequelize.STRING,
     title: Sequelize.STRING,
     tags: Sequelize.STRING,
@@ -16,11 +15,12 @@ module.exports = function (sequelize) {
     is_primary: Sequelize.BOOLEAN
   });
 
-  Photo.synchronize = function (raw, set) {
-    var deferred = q.defer();
+  Photo.saveFromFlick = function (data, set) {
+    var deferred = q.defer(),
+      photoEntity;
 
     Photo
-      .find({ where: {orig_id: raw.id } })
+      .find({ where: {orig_id: data.id } })
       .complete(function (err, photo) {
         if (err) {
           return deferred.reject(err);
@@ -28,22 +28,29 @@ module.exports = function (sequelize) {
         if (!photo) {
           photo = Photo.build();
         }
-        photo.photoset_id = set.id;
-        photo.orig_id = raw.id;
-        photo.title = raw.title;
-        photo.tags = raw.tags;
-        photo.url_sq = raw.url_sq;
-        photo.url_t = raw.url_t;
-        photo.url_s = raw.url_s;
-        photo.url_m = raw.url_m;
-        photo.url_o = raw.url_;
-        photo.is_primary = !!raw.isprimary;
+        photo.photoset_id = data.id;
+        photo.orig_id = data.id;
+        photo.title = data.title;
+        photo.tags = data.tags;
+        photo.url_sq = data.url_sq;
+        photo.url_t = data.url_t;
+        photo.url_s = data.url_s;
+        photo.url_m = data.url_m;
+        photo.url_o = data.url_;
+        photo.is_primary = !!data.isprimary;
         photo.save()
         .complete(function (err, photo) {
           if (err) {
             return deferred.reject(err);
           }
-          deferred.resolve(photo);
+          photoEntity = photo;
+          return set.addPhoto(photoEntity);
+        })
+        .complete(function (err, photo) {
+          if (err) {
+            return deferred.reject(err);
+          }
+          deferred.resolve(photoEntity);
         });
       });
 
@@ -63,6 +70,7 @@ module.exports = function (sequelize) {
         if (!photo) {
           deferred.resolve(null);
         } else {
+          console.error(photo.getPhotoSet());
           deferred.resolve(photo.dataValues);
         }
       });

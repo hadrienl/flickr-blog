@@ -17,6 +17,11 @@ function init () {
   database.Photo = require('./models/photo.js')(sequelize);
   database.Config = require('./models/config.js')(sequelize);
 
+  database.Collection.hasMany(database.PhotoSet);
+  database.PhotoSet.belongsTo(database.Collection);
+  database.PhotoSet.hasMany(database.Photo);
+  database.Photo.belongsTo(database.PhotoSet);
+
   database.models = sequelize.models;
 
   sequelize
