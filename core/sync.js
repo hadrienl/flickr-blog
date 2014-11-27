@@ -76,7 +76,7 @@ function processPhotos (client, set) {
   // Write each photo in database
   .then(function (data) {
     return q.all(data.photoset.photo.map(function (photo) {
-      return database.Photo.synchronize(photo);
+      return database.Photo.synchronize(photo, set);
     }));
   })
   .then(function () {

@@ -7,14 +7,7 @@ var q = require('q'),
   }),
   database = {
     init: init
-  },
-  modelsDeferred = q.defer();
-
-Object.defineProperty(database, 'models', {
-  get: function () {
-    return modelsDeferred.promise;
-  }
-});
+  };
 
 function init () {
   var deferred = q.defer();
@@ -24,7 +17,7 @@ function init () {
   database.Photo = require('./models/photo.js')(sequelize);
   database.Config = require('./models/config.js')(sequelize);
 
-  modelsDeferred.resolve(sequelize.models);
+  database.models = sequelize.models;
 
   sequelize
     .authenticate()

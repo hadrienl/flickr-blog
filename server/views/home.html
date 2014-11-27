@@ -6,7 +6,8 @@
 <h2>
   {{ photoset.title }}
 </h2>
-<p>{{ photoset.date_create|date('jS \o\f F') }}</p>
+<img src="{{ photoset.primary.url_sq }}">
+<p>{{ photoset.date_create|date('Y-m-d') }}</p>
 <div>
   {{ photoset.description | markdown | raw }}
 </div>

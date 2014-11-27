@@ -3,6 +3,7 @@ var Sequelize = require('sequelize'),
 
 module.exports = function (sequelize) {
   var Photo = sequelize.define('Photo', {
+    photoset_id: Sequelize.INTEGER,
     orig_id: Sequelize.STRING,
     title: Sequelize.STRING,
     tags: Sequelize.STRING,
@@ -11,10 +12,11 @@ module.exports = function (sequelize) {
     url_t: Sequelize.STRING,
     url_s: Sequelize.STRING,
     url_m: Sequelize.STRING,
-    url_o: Sequelize.STRING
+    url_o: Sequelize.STRING,
+    is_primary: Sequelize.BOOLEAN
   });
 
-  Photo.synchronize = function (raw) {
+  Photo.synchronize = function (raw, set) {
     var deferred = q.defer();
 
     Photo
@@ -26,6 +28,7 @@ module.exports = function (sequelize) {
         if (!photo) {
           photo = Photo.build();
         }
+        photo.photoset_id = set.id;
         photo.orig_id = raw.id;
         photo.title = raw.title;
         photo.tags = raw.tags;
@@ -34,6 +37,7 @@ module.exports = function (sequelize) {
         photo.url_s = raw.url_s;
         photo.url_m = raw.url_m;
         photo.url_o = raw.url_;
+        photo.is_primary = !!raw.isprimary;
         photo.save()
         .complete(function (err, photo) {
           if (err) {
@@ -41,6 +45,26 @@ module.exports = function (sequelize) {
           }
           deferred.resolve(photo);
         });
+      });
+
+    return deferred.promise;
+  };
+
+  Photo.getPhotoSetThumb = function (photosetId) {
+    var deferred = q.defer();
+
+    Photo.find({
+        where: Sequelize.and(
+          { photoset_id: photosetId },
+          { is_primary: true }
+        )
+      })
+      .then(function (photo) {
+        if (!photo) {
+          deferred.resolve(null);
+        } else {
+          deferred.resolve(photo.dataValues);
+        }
       });
 
     return deferred.promise;
