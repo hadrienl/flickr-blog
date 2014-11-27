@@ -32,7 +32,7 @@ PhotoSet.prototype.getPhotos = function () {
   return deferred.promise;
 };
 
-PhotoSet.getAllWithPrimaryPhoto = function () {
+PhotoSet.getAllWithPrimaryPhoto = function (page) {
   var deferred = q.defer(),
     photosetsData = [];
 
@@ -41,7 +41,7 @@ PhotoSet.getAllWithPrimaryPhoto = function () {
     .PhotoSet
     .findAll({
       limit: 10,
-      offset: 0,
+      offset: (page - 1) * 10,
       order: 'date_create DESC'
     })
     .then(function (photosets) {
@@ -56,7 +56,7 @@ PhotoSet.getAllWithPrimaryPhoto = function () {
           })
           .then(function (data) {
             if (data) {
-              photosetData.primary = data[0];
+              photosetData.primary = new Photo(data[0]);
             }
             photosetsData.push(photosetData);
 

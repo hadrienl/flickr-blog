@@ -1,21 +1,44 @@
 {% extends 'index.html' %}
 
 {% block body %}
-<h1>Flickr Blog</h1>
-{% if !photosets.length %}
-<p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
-{% else %}
-{% for photoset in photosets %}
-<h2>
-  <a href="{{ photoset.getUrl() }}">
-    {{ photoset.title }}
-  </a>
-</h2>
-<img src="{{ photoset.primary.url_sq }}">
-<p>{{ photoset.date_create|date('Y-m-d') }}</p>
 <div>
-  {{ photoset.description | markdown | raw }}
+  <header class="row">
+    <h1
+      class="columns">Flickr Blog</h1>
+  </header>
+  <div
+    class="row">
+    {% if !photosets.length %}
+    <div
+      class="column">
+      <p>Your blog is empty. Did you configured correctly in <a href="/settings">settings</a> ?</p>
+    </div>
+    {% else %}
+    {% for photoset in photosets %}
+    <article
+      class="column large-4">
+      <h2>
+        <a href="{{ photoset.getUrl() }}">
+          {{ photoset.title }}
+        </a>
+      </h2>
+      <p>
+        <a href="{{ photoset.getUrl() }}">
+          <img src="{{ photoset.primary.getSrc('s') }}">
+        </a>
+      </p>
+      <p>
+        <time
+          datetime="{{ photoset.date_create }}">
+          {{ photoset.date_create|date('Y-m-d') }}
+        </time>
+      </p>
+      <div>
+        {{ photoset.description | truncate(200) | markdown | raw }}
+      </div>
+    </article>
+    {% endfor %}
+    {% endif %}
+    {% endblock %}
+  </div>
 </div>
-{% endfor %}
-{% endif %}
-{% endblock %}
