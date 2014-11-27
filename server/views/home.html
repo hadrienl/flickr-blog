@@ -4,7 +4,9 @@
 {% else %}
 {% for photoset in photosets %}
 <h2>
-  {{ photoset.title }}
+  <a href="{{ photoset.getUrl() }}">
+    {{ photoset.title }}
+  </a>
 </h2>
 <img src="{{ photoset.primary.url_sq }}">
 <p>{{ photoset.date_create|date('Y-m-d') }}</p>

@@ -36,7 +36,7 @@ module.exports = function (sequelize) {
         photo.url_t = data.url_t;
         photo.url_s = data.url_s;
         photo.url_m = data.url_m;
-        photo.url_o = data.url_;
+        photo.url_o = data.url_o;
         photo.is_primary = !!data.isprimary;
         photo.save()
         .complete(function (err, photo) {
@@ -52,27 +52,6 @@ module.exports = function (sequelize) {
           }
           deferred.resolve(photoEntity);
         });
-      });
-
-    return deferred.promise;
-  };
-
-  Photo.getPhotoSetThumb = function (photosetId) {
-    var deferred = q.defer();
-
-    Photo.find({
-        where: Sequelize.and(
-          { photoset_id: photosetId },
-          { is_primary: true }
-        )
-      })
-      .then(function (photo) {
-        if (!photo) {
-          deferred.resolve(null);
-        } else {
-          console.error(photo.getPhotoSet());
-          deferred.resolve(photo.dataValues);
-        }
       });
 
     return deferred.promise;
