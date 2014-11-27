@@ -1,5 +1,6 @@
 var Sequelize = require('sequelize'),
-  q = require('q');
+  q = require('q'),
+  entities = new (require('html-entities').XmlEntities)();
 
 module.exports = function (sequelize) {
   var PhotoSet = sequelize.define('PhotoSet', {
@@ -30,7 +31,7 @@ module.exports = function (sequelize) {
         photoset.orig_id = data.id;
         photoset.title = getString(data.title);
         photoset.slug = slugify(data.title);
-        photoset.description = getString(data.description);
+        photoset.description = entities.decode(getString(data.description));
         photoset.date_create = data.date_create;
         photoset.date_update = data.date_update;
         photoset.save()
