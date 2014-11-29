@@ -61,7 +61,10 @@ function initConfig (token, tokenSecret, profile) {
       tokenSecret: tokenSecret,
       userId: profile.id,
       userFullName: profile.fullName,
-      userDisplayName: profile.displayName
+      userDisplayName: profile.displayName,
+      // Default values (temp)
+      coverTag: config.coverTag,
+      collectionId: config.collectionId
     });
 }
 
