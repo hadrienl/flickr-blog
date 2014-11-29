@@ -76,7 +76,7 @@ PhotoSet.getAllWithPrimaryPhoto = function (config) {
             }
           })
           .then(function (data) {
-            if (data) {
+            if (data && data[0]) {
               photosetData.primary = new Photo(data[0]);
             }
             photosetsData.push(photosetData);
