@@ -11,8 +11,7 @@ module.exports = function (sequelize) {
     url_t: Sequelize.STRING,
     url_s: Sequelize.STRING,
     url_m: Sequelize.STRING,
-    url_o: Sequelize.STRING,
-    is_primary: Sequelize.BOOLEAN
+    url_o: Sequelize.STRING
   });
 
   Photo.saveFromFlick = function (data, set) {
@@ -42,7 +41,6 @@ module.exports = function (sequelize) {
           photo.url_s = data.url_s;
           photo.url_m = data.url_m;
           photo.url_o = data.url_o;
-          photo.is_primary = !!data.isprimary;
           photo.save()
           .complete(function (err, photo) {
             if (err) {

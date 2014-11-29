@@ -12,56 +12,7 @@ module.exports = function (sequelize) {
     date_update: Sequelize.DATE
   });
 
-  PhotoSet.saveFromFlickr = function (data, collection) {
-    var deferred = q.defer(),
-      photosetEntity;
-
-    PhotoSet
-      .find({ where: {orig_id: data.id } })
-      .complete(function (err, photoset) {
-        if (err) {
-          return deferred.reject(err);
-        }
-
-        extractDateFromTitle(data);
-        data.description = entities.decode(getString(data.description));
-        data.title = getString(data.title);
-
-        try {
-          if (!photoset) {
-            throw 'photoset does not exist';
-          }
-          if (photoset.title !== data.title ||
-              photoset.description !== data.description ||
-              +photoset.date_create !== +data.date_create) {
-            throw 'photoset had changed';
-          }
-          deferred.resolve(photoset);
-        } catch(e) {
-          photoset = PhotoSet.build();
-
-          photoset.orig_id = data.id;
-          photoset.title = data.title;
-          photoset.slug = slugify(data.title);
-          photoset.description = data.description;
-          photoset.date_create = data.date_create;
-          photoset.date_update = data.date_update;
-          photoset.save()
-          .then(function (photoset) {
-            photosetEntity = photoset;
-            return collection.addPhotoSet(photoset);
-          })
-          .then(function (data) {
-            deferred.resolve(photosetEntity);
-          })
-          .catch(function (err) {
-            return deferred.reject(err);
-          });
-        }
-      });
-
-    return deferred.promise;
-  };
+  PhotoSet.saveFromFlickr = saveFromFlickr;
 
   return PhotoSet;
 };
@@ -100,4 +51,55 @@ function slugify (string) {
     .toLowerCase()
     .replace(/[^\w]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+function saveFromFlickr (data, collection) {
+  var deferred = q.defer(),
+    photosetEntity;
+
+  PhotoSet
+    .find({ where: {orig_id: data.id } })
+    .complete(function (err, photoset) {
+      if (err) {
+        return deferred.reject(err);
+      }
+
+      extractDateFromTitle(data);
+      data.description = entities.decode(getString(data.description));
+      data.title = getString(data.title);
+
+      try {
+        if (!photoset) {
+          throw 'photoset does not exist';
+        }
+        if (photoset.title !== data.title ||
+            photoset.description !== data.description ||
+            +photoset.date_create !== +data.date_create) {
+          throw 'photoset had changed';
+        }
+        deferred.resolve(photoset);
+      } catch(e) {
+        photoset = PhotoSet.build();
+
+        photoset.orig_id = data.id;
+        photoset.title = data.title;
+        photoset.slug = slugify(data.title);
+        photoset.description = data.description;
+        photoset.date_create = data.date_create;
+        photoset.date_update = data.date_update;
+        photoset.save()
+        .then(function (photoset) {
+          photosetEntity = photoset;
+          return collection.addPhotoSet(photoset);
+        })
+        .then(function (data) {
+          deferred.resolve(photosetEntity);
+        })
+        .catch(function (err) {
+          return deferred.reject(err);
+        });
+      }
+    });
+
+  return deferred.promise;
 }

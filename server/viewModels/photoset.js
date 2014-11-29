@@ -32,6 +32,38 @@ PhotoSet.prototype.getPhotos = function () {
   return deferred.promise;
 };
 
+PhotoSet.prototype.getCover = function () {
+  var coverTag,
+    $data = this.$data;
+
+  return database
+    .models
+    .Config
+    .get('coverTag')
+    .then(function (data) {
+      coverTag = data || 'cover';
+
+      return $data.getPhotos();
+    })
+    .then(function (data) {
+      if (!data) {
+        return null;
+      }
+      var cover = data[0];
+
+      if (coverTag) {
+        data.some(function (photo) {
+          if (!!~photo.tags.indexOf(coverTag)) {
+            cover = photo;
+            return true;
+          }
+        });
+      }
+
+      return new Photo(cover);
+    });
+};
+
 PhotoSet.count = function () {
   var deferred = q.defer();
 
@@ -49,15 +81,12 @@ PhotoSet.count = function () {
   return deferred.promise;
 };
 
-PhotoSet.getAllWithPrimaryPhoto = function (config) {
-  var deferred = q.defer(),
-    photosetsData = [];
-
+PhotoSet.getAll = function (config) {
   config = config || {};
   config.perPage = config.perPage || 10;
   config.page = config.page || 1;
 
-  database
+  return database
     .models
     .PhotoSet
     .findAll({
@@ -66,29 +95,9 @@ PhotoSet.getAllWithPrimaryPhoto = function (config) {
       order: 'date_create DESC'
     })
     .then(function (photosets) {
-      return q.all(photosets.map(function (photoset) {
-        var deferred = q.defer(),
-          photosetData = new PhotoSet(photoset);
-
-        photoset.getPhotos({
-          where: {
-              is_primary: true
-            }
-          })
-          .then(function (data) {
-            if (data && data[0]) {
-              photosetData.primary = new Photo(data[0]);
-            }
-            photosetsData.push(photosetData);
-
-            deferred.resolve(photosetsData);
-          });
-
-        return deferred.promise;
-      }));
-    })
-    .then(function () {
-      photosetsData.sort(function (a, b) {
+      return photosets.map(function (photoset) {
+        return new PhotoSet(photoset);
+      }).sort(function (a, b) {
         if (a.date_create < b.date_create) {
           return 1;
         } else if (a.date_create > b.date_create) {
@@ -97,13 +106,7 @@ PhotoSet.getAllWithPrimaryPhoto = function (config) {
           return 0;
         }
       });
-      deferred.resolve(photosetsData);
-    })
-    .catch(function (err) {
-      deferred.reject(err);
     });
-
-  return deferred.promise;
 };
 
 PhotoSet.getFromSlug = function (slug) {
