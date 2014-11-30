@@ -31,8 +31,10 @@ module.exports = function (client) {
             return client.getPhotosFromPhotoSet(photoset.orig_id);
           })
           .then(function (photosData) {
+            var pos = 0;
             return q.all(photosData.map(function (photo) {
               // Sync photo
+              photo.position = pos++;
               return database.Photo.saveFromFlick(photo, photosetEntity);
             }));
           })

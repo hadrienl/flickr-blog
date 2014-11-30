@@ -54,7 +54,7 @@ Client.prototype.getPhotosFromPhotoSet = function (id) {
       'executeAPIRequest',
       'flickr.photosets.getPhotos', {
         'photoset_id': id,
-        'extras': 'tags, media, url_sq, url_t, url_s, url_m, url_o, last_update',
+        'extras': 'owner_name, tags, media, url_sq, url_t, url_s, url_m, url_o, last_update',
         'per_page': 9999
       },
       true

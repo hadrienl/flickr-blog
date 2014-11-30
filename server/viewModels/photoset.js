@@ -20,7 +20,7 @@ PhotoSet.prototype.getPhotos = function () {
   this
     .$data
     .getPhotos({
-      order: 'id ASC'
+      order: 'position ASC'
     })
     .then(function (data) {
       deferred.resolve(data.map(function (photo) {
