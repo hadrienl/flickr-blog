@@ -7,6 +7,7 @@ module.exports = function (sequelize) {
     title: Sequelize.STRING,
     tags: Sequelize.STRING,
     media: Sequelize.STRING,
+    last_update: Sequelize.DATE,
     url_sq: Sequelize.STRING,
     url_t: Sequelize.STRING,
     url_s: Sequelize.STRING,
@@ -27,15 +28,19 @@ module.exports = function (sequelize) {
 
         try {
           if (!photo) {
+            photo = Photo.build();
             throw 'Photo does not exist';
+          }
+          if (new Date(data.lastupdate * 1000) > photo.last_update) {
+            throw 'Photo has changed';
           }
           deferred.resolve(photo);
         } catch (e) {
-          photo = Photo.build();
           photo.photoset_id = data.id;
           photo.orig_id = data.id;
           photo.title = data.title;
           photo.tags = data.tags;
+          photo.last_update = new Date(data.lastupdate * 1000);
           photo.url_sq = data.url_sq;
           photo.url_t = data.url_t;
           photo.url_s = data.url_s;
