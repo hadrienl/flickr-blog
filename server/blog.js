@@ -1,5 +1,6 @@
 var database = require('../core/database'),
-  PhotoSet = require('./viewModels/photoset.js');
+  PhotoSet = require('./viewModels/photoset.js'),
+  q = require('q');
 
 module.exports = function (app) {
   var photosets;
@@ -41,15 +42,26 @@ module.exports = function (app) {
 
 function home (req, res) {
   var page = req.params.page || 1,
-    perPage = 10;
+    perPage = 10,
+    photosets;
 
   PhotoSet
-    .getAllWithPrimaryPhoto({
+    .getAll({
       page: page,
       perPage: perPage
     })
     .then(function (data) {
       photosets = data;
+      return q.all(photosets.map(function (photoset) {
+        return photoset
+          .getCover()
+          .then(function (cover) {
+            photoset.cover = cover;
+            return photoset;
+          });
+      }));
+    })
+    .then(function () {
       return PhotoSet.count();
     })
     .then(function (count) {
