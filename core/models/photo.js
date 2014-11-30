@@ -8,6 +8,7 @@ module.exports = function (sequelize) {
     tags: Sequelize.STRING,
     media: Sequelize.STRING,
     last_update: Sequelize.DATE,
+    page_url: Sequelize.STRING,
     url_sq: Sequelize.STRING,
     url_t: Sequelize.STRING,
     url_s: Sequelize.STRING,
@@ -41,6 +42,8 @@ module.exports = function (sequelize) {
           photo.title = data.title;
           photo.tags = data.tags;
           photo.last_update = new Date(data.lastupdate * 1000);
+          photo.page_url = 'https://www.flickr.com/photos/' + data.ownername +
+            '/' + data.id + '/';
           photo.url_sq = data.url_sq;
           photo.url_t = data.url_t;
           photo.url_s = data.url_s;
