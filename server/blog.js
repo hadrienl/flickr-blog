@@ -6,38 +6,7 @@ module.exports = function (app) {
   var photosets;
   app.get('/', home);
   app.get('/page-:page', home);
-  app.get(/^\/([0-9]{4})\/([0-9]{2})\/([^\/]+)\.html/, function (req, res, next) {
-    var year = +req.params[0],
-      month = +req.params[1],
-      slug = req.params[2],
-      photoset, photos;
-
-    PhotoSet
-      .getFromSlug(slug)
-      .then(function (data) {
-        photoset = data;
-        if (photoset.date_create.getFullYear() !== year ||
-            photoset.date_create.getMonth() !== month) {
-          res.redirect(photoset.getUrl());
-          throw 'redirect';
-        }
-        return data.getPhotos();
-      })
-      .then(function (data) {
-        photos = data;
-        res.render('photoset', {
-          photoset: photoset,
-          photos: photos
-        });
-      })
-      .catch(function (err) {
-        if (err !== 'redirect') {
-          res.render('error', {
-            error: err.message
-          });
-        }
-      });
-  });
+  app.get(/^\/([0-9]{4})\/([0-9]{2})\/([^\/]+)\.html/, page);
 };
 
 function home (req, res) {
@@ -71,5 +40,39 @@ function home (req, res) {
         page: page,
         perPage: perPage
       });
+    });
+}
+
+function page (req, res, next) {
+  var year = +req.params[0],
+    month = +req.params[1],
+    slug = req.params[2],
+    photoset, photos;
+
+  PhotoSet
+    .getFromSlug(slug)
+    .then(function (data) {
+      photoset = data;
+      if (photoset.date_create.getFullYear() !== year ||
+          photoset.date_create.getMonth() !== month) {
+        res.redirect(photoset.getUrl());
+        throw 'redirect';
+      }
+      return photoset.getPhotos();
+    })
+    .then(function (data) {
+      photos = data;
+      res.render('photoset', {
+        photoset: photoset,
+        photos: photos
+      });
+    })
+    .catch(function (err) {
+      console.error(err);
+      if (err !== 'redirect') {
+        res.render('error', {
+          error: err.message || err
+        });
+      }
     });
 }

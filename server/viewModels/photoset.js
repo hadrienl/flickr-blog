@@ -19,14 +19,16 @@ PhotoSet.prototype.getPhotos = function () {
 
   this
     .$data
-    .getPhotos()
+    .getPhotos({
+      order: 'id ASC'
+    })
     .then(function (data) {
       deferred.resolve(data.map(function (photo) {
         return new Photo(photo);
       }));
     })
     .catch(function (err) {
-      deferred.reject('No photo found');
+      deferred.reject(new Error('No photo found'));
     });
 
   return deferred.promise;
