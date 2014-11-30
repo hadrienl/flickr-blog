@@ -29,17 +29,14 @@ module.exports = function (sequelize) {
 
         try {
           if (!photoset) {
+            photoset = PhotoSet.build();
             throw 'photoset does not exist';
           }
-          if (photoset.title !== data.title ||
-              photoset.description !== data.description ||
-              +photoset.date_create !== +data.date_create) {
+          if (new Date(data.date_update*1000) > photoset.date_update) {
             throw 'photoset had changed';
           }
           deferred.resolve(photoset);
         } catch(e) {
-          photoset = PhotoSet.build();
-
           photoset.orig_id = data.id;
           photoset.title = data.title;
           photoset.slug = slugify(data.title);

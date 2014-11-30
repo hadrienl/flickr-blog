@@ -19,7 +19,7 @@ Liste des classeurs avec leurs listes d'albums avec classeur id optionnel. Perme
 Récupère les photos d'un album.
 
 * photoset_id: `72157649416318032`
-* extras: `tags, media, url_sq, url_t, url_s, url_m, url_o`
+* extras: `tags, media, url_sq, url_t, url_s, url_m, url_o, last_update`
 * per_page: `9999`
 
    https://www.flickr.com/services/api/explore/flickr.photosets.getPhotos
