@@ -86,17 +86,17 @@ module.exports = {
     database
       .init()
       .then(function (data) {
-        return data.Config.get('token');
+        return q.all([
+          data.Config.get('token'),
+          data.Config.get('tokenSecret')
+        ]);
       })
       .then(function (data) {
         if (!data) {
           return deferred.reject('App is not well configured and cannot sync. Please go to /settings');
         }
-        token = data;
-        return database.Config.get('tokenSecret');
-      })
-      .then(function (data) {
-        tokenSecret = data;
+        token = data[0];
+        tokenSecret = data[1];
 
         var flickr = new (require('flickr').Flickr)(
           config.flickr.apiKey,

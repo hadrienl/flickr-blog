@@ -2,18 +2,22 @@
 {% block body %}
 <h1>Welcome to your new flickr blog!</h1>
 <p>First, configure your blog:</p>
-<form>
+<form
+  method="post"
+  action="/settings">
   <div>
     <label>Set the url of your blog</label>
     <input
       type="url"
+      name="url"
       placeholder="http://localhost"
       value="{{ config.url }}">
   </div>
 
   <div>
     <label>Choose a collection:</label>
-    <select>
+    <select
+      name="collectionId">
       {% for collection in collections %}
       <option
         value="{{ collection.id }}"
@@ -29,8 +33,59 @@
     <label>Type a hashtag to select the cover of your photosets</label>
     <input
       type="text"
+      name="coverTag"
       placeholder="cover"
       value="{{ config.coverTag }}">
   </div>
+
+  <button
+    type="submit">
+    Save
+  </button>
 </form>
+
+<div
+  id="syncing">
+  Your blog is now syncing with your Flickr account… Please wait.
+</div>
+<div
+  id="sync-end"
+  style="display: none">
+  Your blog is now sync! <a href="/">Go watch it by yourself!</a>
+</div>
+
+<script>
+(function () {
+  var syncing = false,
+    wasSyncing = false;
+  function checkSync() {
+    var req = new XMLHttpRequest();
+    req.onload = function (e) {
+      try {
+        syncing = JSON.parse(e.target.responseText).syncing;
+        setTimeout(checkSync, 200);
+      } catch (err) {}
+      toggleSyncDisplay(syncing);
+    };
+    req.open('GET', '/settings/syncing', false); 
+    req.send(null);
+  }
+  checkSync();
+
+  function toggleSyncDisplay(on) {
+    var el = document.getElementById('syncing'),
+      syncEnd = document.getElementById('sync-end');
+
+    if (on) {
+      el.style.display = '';
+      wasSyncing = true;
+    } else {
+      el.style.display = 'none';
+      if (wasSyncing) {
+        syncEnd.style.display = '';
+      }
+    }
+  }
+})();
+</script>
 {% endblock %}

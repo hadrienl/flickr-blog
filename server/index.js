@@ -1,5 +1,6 @@
 var express = require('express'),
   session = require('express-session'),
+  bodyParser = require('body-parser'),
   app = express(),
   swig = require('./swig'),
   config = require('../config.json');
@@ -15,6 +16,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 require('./auth')(app);
 require('./blog')(app);

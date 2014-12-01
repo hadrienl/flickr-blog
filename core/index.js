@@ -17,11 +17,7 @@ var core = {
           cancelInterval(syncLoop);
         }
         function startSync() {
-          console.error('Start Flickr Sync');
-          sync(client)
-            .then (function () {
-              console.error('Sync is done!');
-            });
+          sync(client);
         }
         syncLoop = setInterval(startSync, 5*60*1000);
         startSync();
