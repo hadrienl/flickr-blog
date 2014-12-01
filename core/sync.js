@@ -23,6 +23,9 @@ module.exports = function () {
     .get('collectionId')
     .then(function (data) {
       collectionId = data;
+      if (!collectionId) {
+        throw new Error('No collectionId saved');
+      }
       return flickr
         .client();
     })
