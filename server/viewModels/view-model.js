@@ -14,8 +14,10 @@ function ViewModel (data) {
       }
     });
   }
-  for (var i in data.dataValues) {
-    addAttr(i);
+  if (data.dataValues) {
+    for (var i in data.dataValues) {
+      addAttr(i);
+    }
   }
 }
 module.exports = ViewModel;
