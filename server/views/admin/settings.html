@@ -1,0 +1,36 @@
+{% extends 'admin.html' %}
+{% block body %}
+<h1>Welcome to your new flickr blog!</h1>
+<p>First, configure your blog:</p>
+<form>
+  <div>
+    <label>Set the url of your blog</label>
+    <input
+      type="url"
+      placeholder="http://localhost"
+      value="{{ config.url }}">
+  </div>
+
+  <div>
+    <label>Choose a collection:</label>
+    <select>
+      {% for collection in collections %}
+      <option
+        value="{{ collection.id }}"
+        {% if collection.id == config.collectionId%}selected{% endif %}>
+        <img src="{{ collection.picture }}">
+        {{ collection.title }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label>Type a hashtag to select the cover of your photosets</label>
+    <input
+      type="text"
+      placeholder="cover"
+      value="{{ config.coverTag }}">
+  </div>
+</form>
+{% endblock %}
