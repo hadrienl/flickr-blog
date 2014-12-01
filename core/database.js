@@ -3,6 +3,7 @@ var q = require('q'),
   sequelize = new Sequelize('flickr-blog.db', null, null, {
     dialect: 'sqlite',
     storage: './flickr-blog.db',
+    maxConcurrentQueries: 500,
     logging: function () {}
   }),
   database = {
