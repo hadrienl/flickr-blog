@@ -16,7 +16,6 @@ passport.use(new FlickrStrategy({
           initConfig(token, tokenSecret, profile)
             .then(function () {
               done(null, profile);
-              require('../core').init();
             });
           } else {
             if (profile.id === value) {
@@ -61,10 +60,7 @@ function initConfig (token, tokenSecret, profile) {
       tokenSecret: tokenSecret,
       userId: profile.id,
       userFullName: profile.fullName,
-      userDisplayName: profile.displayName,
-      // Default values (temp)
-      coverTag: config.coverTag,
-      collectionId: config.collectionId
+      userDisplayName: profile.displayName
     });
 }
 

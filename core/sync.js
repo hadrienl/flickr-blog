@@ -1,15 +1,38 @@
 var q = require('q'),
-  database = require('./database');
+  database = require('./database'),
+  flickr = require('./flickr'),
+  syncing = false;
 
-module.exports = function (client) {
+module.exports = function () {
+  console.log('Start Flickr Sync');
   var deferred = q.defer(),
-    collectionData;
+    collectionId,
+    collectionData,
+    client;
 
-  // I'm supposed to already have a Collection set
-  var collectionId = '24022430-72157646968831464';
+  if (syncing) {
+    deferred.reject('Sync is in progress');
+    return deferred;
+  }
+
+  syncing = true;
 
   // Fetch collection
-  client.getCollectionData(collectionId)
+  database
+    .Config
+    .get('collectionId')
+    .then(function (data) {
+      collectionId = data;
+      if (!collectionId) {
+        throw new Error('No collectionId saved');
+      }
+      return flickr
+        .client();
+    })
+    .then(function (data) {
+      client = data;
+      return client.getCollectionData(collectionId);
+    })
     .then(function (data) {
       collectionData = data;
       // Sync collection
@@ -49,10 +72,15 @@ module.exports = function (client) {
       }));
     })
     .then(function () {
+      console.log('Sync is done!');
       deferred.resolve();
     })
     .catch(function (err) {
+      console.error('Sync failed.', err);
       deferred.reject(err);
+    })
+    .finally(function () {
+      syncing = false;
     });
 
   return deferred.promise;

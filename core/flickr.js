@@ -1,22 +1,31 @@
 var q = require('q'),
-  config = require('../config.json');
+  config = require('../config.json'),
+  database = require('./database');
 
 function Client (flickr) {
   this.client = flickr;
 }
 Client.prototype.getCollectionData = function (id) {
-  var deferred = q.defer();
+  var deferred = q.defer(),
+    params = {};
+
+  if (id) {
+    params.collection_id = id;
+  }
 
   q.ninvoke(
       this.client,
       'executeAPIRequest',
-      'flickr.collections.getTree', {
-        'collection_id': id
-      },
+      'flickr.collections.getTree',
+      params,
       true
     )
     .then(function (data) {
-      deferred.resolve(data.collections.collection[0]);
+      if (id && data.collections.collection[0].id === id) {
+        deferred.resolve(data.collections.collection[0]);
+      } else {
+        deferred.resolve(data.collections.collection);
+      }
     })
     .catch(function (err) {
       deferred.reject(err);
@@ -70,20 +79,24 @@ Client.prototype.getPhotosFromPhotoSet = function (id) {
 };
 
 module.exports = {
-  client: function (database) {
+  client: function () {
     var deferred = q.defer(),
       token, tokenSecret;
 
-    database.Config.get('token')
+    database
+      .init()
+      .then(function (data) {
+        return q.all([
+          data.Config.get('token'),
+          data.Config.get('tokenSecret')
+        ]);
+      })
       .then(function (data) {
         if (!data) {
           return deferred.reject('App is not well configured and cannot sync. Please go to /settings');
         }
-        token = data;
-        return database.Config.get('tokenSecret');
-      })
-      .then(function (data) {
-        tokenSecret = data;
+        token = data[0];
+        tokenSecret = data[1];
 
         var flickr = new (require('flickr').Flickr)(
           config.flickr.apiKey,
