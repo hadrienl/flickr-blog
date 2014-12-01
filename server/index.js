@@ -1,7 +1,8 @@
 var express = require('express'),
   session = require('express-session'),
   app = express(),
-  swig = require('./swig');
+  swig = require('./swig'),
+  config = require('../config.json');
 
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
@@ -22,7 +23,7 @@ require('./settings')(app);
 app.use(express.static(__dirname + '/../bower_components'));
 
 function init () {
-  var server = app.listen(3000, function () {
+  var server = app.listen(config.server.port, function () {
     var host = server.address().address;
     var port = server.address().port;
 

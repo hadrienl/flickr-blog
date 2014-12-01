@@ -1,7 +1,13 @@
 {
-  "host": "http://127.0.0.1:3000",
-  "API_KEY": "",
-  "CONSUMER_SECRET": "",
+  "url": "http://127.0.0.1:3000",
+  "server": {
+    "host": "127.0.0.1",
+    "port": "3000",
+  },
+  "flickr": {
+    "apiKey": "",
+    "consumerSecret": ""
+  },
   "coverTag": "cover",
   "collectionId": ""
 }

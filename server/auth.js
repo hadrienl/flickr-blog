@@ -5,9 +5,9 @@ var q = require('q'),
   database = require('../core/database');
 
 passport.use(new FlickrStrategy({
-    consumerKey: config.API_KEY,
-    consumerSecret: config.CONSUMER_SECRET,
-    callbackURL: config.host + '/auth/callback'
+    consumerKey: config.flickr.apiKey,
+    consumerSecret: config.flickr.consumerSecret,
+    callbackURL: config.url + '/auth/callback'
   },
   function(token, tokenSecret, profile, done) {
     database.Config.get('userId')
@@ -72,7 +72,7 @@ init.middleware = function (req, res, next) {
   if (req.user) {
     next();
   } else {
-    res.write('<p> auth needed. <a href="/auth">Login with Flickr</a></p>');
+    res.render('needauth');
   }
 };
 

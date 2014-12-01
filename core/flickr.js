@@ -86,8 +86,8 @@ module.exports = {
         tokenSecret = data;
 
         var flickr = new (require('flickr').Flickr)(
-          config.API_KEY,
-          config.CONSUMER_SECRET,
+          config.flickr.apiKey,
+          config.flickr.consumerSecret,
           {
             'oauth_token': token,
             'oauth_token_secret': tokenSecret
