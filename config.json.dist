@@ -7,7 +7,5 @@
   "flickr": {
     "apiKey": "",
     "consumerSecret": ""
-  },
-  "coverTag": "cover",
-  "collectionId": ""
+  }
 }
