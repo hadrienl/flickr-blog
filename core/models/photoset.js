@@ -32,7 +32,7 @@ module.exports = function (sequelize) {
             photoset = PhotoSet.build();
             throw 'photoset does not exist';
           }
-          if (new Date(data.date_update*1000) > photoset.date_update) {
+          if (data.date_update > photoset.date_update) {
             throw 'photoset had changed';
           }
           deferred.resolve(photoset);
@@ -71,8 +71,8 @@ function getString (data) {
 
 
 function extractDateFromTitle(data) {
-
-  data.date_update = new Date(data.date_update*1000);
+  data.date_update = new Date(data.date_update * 1000);
+  data.date_create = new Date(data.date_create * 1000);
 
   var titleParts = getString(data.title).match(/^\[(.*?)\]\s?(.*)$/),
     date, title;
@@ -84,7 +84,6 @@ function extractDateFromTitle(data) {
     date = new Date(titleParts[1]);
     title = titleParts[2];
   } catch (e) {
-    data.date_create = new Date(data.date_create * 1000);
     return;
   }
 
