@@ -40,7 +40,7 @@ module.exports = function (sequelize) {
           photoset.orig_id = data.id;
           photoset.title = data.title;
           photoset.slug = slugify(data.title);
-          photoset.description = data.description;
+          photoset.description = cleanDescription(data.description);
           photoset.date_create = data.date_create;
           photoset.date_update = data.date_update;
           photoset.save()
@@ -96,4 +96,12 @@ function slugify (string) {
     .toLowerCase()
     .replace(/[^\w]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+function cleanDescription (description) {
+  var a =  description
+    .replace(/<a.*<\/a>/g, function (match, position, string) {
+      return match.match(/href=["'](.*?)["']/)[1];
+    });
+  return a;
 }
