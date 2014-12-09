@@ -3,8 +3,10 @@
 <head>
   <title></title>
   <link rel="stylesheet" href="/foundation/css/foundation.css">
+  {% block head %}{% endblock %}
 </head>
 <body>
- {% block body %} {% endblock %}
+  {% block body %}{% endblock %}
+  {% block foot %}{% endblock %}
 </body>
 </html>
