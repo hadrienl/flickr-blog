@@ -1,0 +1,11 @@
+.breadcrumbs {
+  background: none;
+  border: none;
+}
+.breadcrumbs a {
+  font-size: 1em;
+  line-height: 1.8em;
+}
+.breadcrumbs > *.current {
+  color: white;
+}

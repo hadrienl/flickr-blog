@@ -1,13 +1,14 @@
 {% extends 'index.html' %}
 
 {% block body %}
-<div>
-  <header class="row">
-    <h1
-      class="columns">
-      <a href="/">Flickr Blog</a>
-    </h1>
-  </header>
+<div
+  class="row">
+  <h1
+    class="title">
+    <a href="/">
+      {{ siteTitle }}
+    </a>
+  </h1>
   {% if !photosets.length %}
   <div
     class="column">

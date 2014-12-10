@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>{{ siteTitle }}</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <link rel="stylesheet" href="/foundation/css/foundation.css">
+  <link rel="stylesheet" href="/styles/styles.css">
   {% block head %}{% endblock %}
 </head>
 <body>
-  {% block body %}{% endblock %}
+  <div class="off-canvas-wrap" data-offcanvas>
+    <div class="inner-wrap">
+      <nav class="tab-bar">
+        <section class="left-small">
+          <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+        </section>
+
+        <header class="right tab-bar-section">
+          <nav class="breadcrumbs">
+            <a href="/">
+              {{ siteTitle }}
+            </a>
+            {% if photoset %}
+            <a
+              class="current">
+              {{ photoset.title }}
+            </a>
+            {% endif %}
+          </nav>
+        </header>
+      </nav>
+
+      <aside class="left-off-canvas-menu">
+        {% if recentPosts.length %}
+        <ul class="off-canvas-list">
+          <li><label>Recent posts</label></li>
+          {% for post in recentPosts %}
+          <li>
+            <a href="{{ post.getUrl() }}">{{ post.title }}</a>
+          </li>
+          {% endfor %}
+          <li><a href="#">...</a></li>
+        </ul>
+        {% endif %}
+        {% if tags.length %}
+        <ul class="off-canvas-list">
+          <li><label>Tags</label></li>
+          {% for tag in tags %}
+          <li><a href="{{ tag.getUrl() ">#{{ tag.label }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </aside>
+
+      <section class="main-section">
+        {% block body %}{% endblock %}
+      </section>
+
+      <a class="exit-off-canvas"></a>
+
+    </div>
+  </div>
+  
+  <script src="/jquery/dist/jquery.min.js"></script>
+  <script src="/foundation/js/foundation.min.js"></script>
+  <script src="/foundation/js/foundation/foundation.offcanvas.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
   {% block foot %}{% endblock %}
 </body>
 </html>

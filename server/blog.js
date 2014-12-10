@@ -1,6 +1,7 @@
 var database = require('../core/database'),
   PhotoSet = require('./viewModels/photoset.js'),
-  q = require('q');
+  q = require('q'),
+  _ = require('lodash');
 
 module.exports = function (app) {
   var photosets;
@@ -12,16 +13,25 @@ module.exports = function (app) {
 function home (req, res) {
   var page = req.params.page || 1,
     perPage = 10,
-    photosets;
-
-  PhotoSet
-    .getAll({
+    photosets,
+    data = {
+      pageType: 'home',
       page: page,
-      perPage: perPage
+      perPage: 10
+    };
+
+  fetchData()
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      return PhotoSet
+        .getAll({
+          page: page,
+          perPage: perPage
+        });
     })
-    .then(function (data) {
-      photosets = data;
-      return q.all(photosets.map(function (photoset) {
+    .then(function (_data) {
+      data.photosets = _data;
+      return q.all(data.photosets.map(function (photoset) {
         return photoset
           .getCover()
           .then(function (cover) {
@@ -33,13 +43,9 @@ function home (req, res) {
     .then(function () {
       return PhotoSet.count();
     })
-    .then(function (count) {
-      res.render('home', {
-        photosets: photosets,
-        count: count,
-        page: page,
-        perPage: perPage
-      });
+    .then(function (_data) {
+      data.count = _data;
+      res.render('home', data);
     });
 }
 
@@ -47,25 +53,29 @@ function page (req, res, next) {
   var year = +req.params[0],
     month = +req.params[1],
     slug = req.params[2],
-    photoset, photos;
+    photoset, photos,
+    data = {
+      pageType: 'photoset',
+    };
 
-  PhotoSet
-    .getFromSlug(slug)
-    .then(function (data) {
-      photoset = data;
-      if (photoset.date_create.getFullYear() !== year ||
-          photoset.date_create.getMonth() !== month) {
-        res.redirect(photoset.getUrl());
+  fetchData()
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      return PhotoSet
+        .getFromSlug(slug);
+    })
+    .then(function (_data) {
+      data.photoset = _data;
+      if (data.photoset.date_create.getFullYear() !== year ||
+          data.photoset.date_create.getMonth() !== month) {
+        res.redirect(data.photoset.getUrl());
         throw 'redirect';
       }
-      return photoset.getPhotos();
+      return data.photoset.getPhotos();
     })
-    .then(function (data) {
-      photos = data;
-      res.render('photoset', {
-        photoset: photoset,
-        photos: photos
-      });
+    .then(function (_data) {
+      data.photos = _data;
+      res.render('photoset', data);
     })
     .catch(function (err) {
       console.error(err);
@@ -75,4 +85,26 @@ function page (req, res, next) {
         });
       }
     });
+}
+
+/**
+ * Fetch common data for every pages
+ */
+function fetchData () {
+  var deferred = q.defer(),
+    data = {
+      siteTitle: 'Titre du blog'
+    };
+
+  PhotoSet
+    .getAll({
+      orderBy: 'date_create',
+      orderAsc: true
+    })
+    .then(function (_data) {
+      data.recentPosts = _data;
+      deferred.resolve(data);
+    });
+
+  return deferred.promise;
 }

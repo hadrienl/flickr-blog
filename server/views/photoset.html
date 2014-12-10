@@ -12,31 +12,40 @@
 {% endblock %}
 
 {% block body %}
-<p>
-  <a href="/">Home</a>
-</p>
-<h1>
-  {{ photoset.title }}
-</h1>
-<div>
-  {{ photoset.description | markdown | raw}}
+<div class="row">
+  <div class="columns">
+    <h1>
+      {{ photoset.title }}
+    </h1>
+    <div>
+      {{ photoset.description | markdown | raw}}
+    </div>
+    <div
+      class="row">
+      <div
+        id="gallery"
+        class="columns large-8 small-block-grid-2">
+        {% for photo in photos %}
+        <figure>
+          <a
+            href="{{ photo.url_o }}"
+            data-size="{{ photo.width }}x{{ photo.height }}">
+            <img
+              src="{{ photo.url_m }}"
+              alt="{{ photo.tags }}"
+              title="{{ photo.title }}">
+          </a>
+        </figure>
+        {% endfor %}
+      </div>
+      <div
+        class="columns large-4">
+        <p>Share</p>
+        <p>Comments</p>
+      </div>
+    </div>
+  </div>
 </div>
-<div
-  id="gallery">
-  {% for photo in photos %}
-  <figure>
-    <a
-      href="{{ photo.url_o }}"
-      data-size="{{ photo.width }}x{{ photo.height }}">
-      <img
-        src="{{ photo.url_m }}"
-        alt="{{ photo.tags }}"
-        title="{{ photo.title }}">
-    </a>
-  </figure>
-  {% endfor %}
-</div>
-
 
 
 <!-- Root element of PhotoSwipe. Must have class pswp. -->
