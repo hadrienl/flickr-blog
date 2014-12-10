@@ -140,7 +140,7 @@
       items;
 
     items = parseThumbnailElements(galleryElement);
-console.log(index);
+
     // define options (if needed)
     options = {
       index: index,

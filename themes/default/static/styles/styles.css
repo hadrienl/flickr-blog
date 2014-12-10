@@ -1,3 +1,6 @@
+.off-canvas-wrap {
+  background: #eee;
+}
 .breadcrumbs {
   background: none;
   border: none;
@@ -8,4 +11,31 @@
 }
 .breadcrumbs > *.current {
   color: white;
+}
+
+#gallery figure {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+#gallery figure a {
+  display: inline-block;
+  position: relative;
+  padding: 5px;
+  margin: 5px;
+  background: white;
+  border: 1px solid rgba(0,0,0,.1);
+}
+#gallery figure img {
+  box-shadow: 0 0 5px rgba(0,0,0,.4);
+  width: 100%;
+}
+#gallery figure.full-width {
+  width: 98%;
+}
+#gallery figure.large-12 a {
+width: 98.5%;
+}
+#gallery figure.clear {
+  clear: both;
 }

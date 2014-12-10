@@ -25,18 +25,21 @@
       <div
         id="gallery"
         class="columns large-8 small-block-grid-2">
+        <div class="row">
         {% for photo in photos %}
-        <figure>
-          <a
-            href="{{ photo.url_o }}"
-            data-size="{{ photo.width }}x{{ photo.height }}">
-            <img
-              src="{{ photo.url_m }}"
-              alt="{{ photo.tags }}"
-              title="{{ photo.title }}">
-          </a>
-        </figure>
+          <figure
+            class="column large-{% if isFullWidth(photo) %}12{% else %}6{% endif %} {% if mustBreakLine(photo) %}clear{% endif %}">
+            <a
+              href="{{ photo.url_o }}"
+              data-size="{{ photo.width }}x{{ photo.height }}">
+              <img
+                src="{{ photo.url_m }}"
+                alt="{{ photo.tags }}"
+                title="{{ photo.title }}">
+            </a>
+          </figure>
         {% endfor %}
+        </div>
       </div>
       <div
         class="columns large-4">

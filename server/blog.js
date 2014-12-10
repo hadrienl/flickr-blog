@@ -54,8 +54,22 @@ function page (req, res, next) {
     month = +req.params[1],
     slug = req.params[2],
     photoset, photos,
+    counter = 0,
     data = {
       pageType: 'photoset',
+      isFullWidth: function(photo) {
+        if (photo.width > photo.height && counter % 2 === 0) {
+          return true;
+        }
+        counter++;
+        return false;
+      },
+      mustBreakLine: function (photo) {
+        if (counter % 2 !== 0) {
+          return true;
+        }
+        return false;
+      }
     };
 
   fetchData()
@@ -89,6 +103,7 @@ function page (req, res, next) {
 
 /**
  * Fetch common data for every pages
+ * TODO : you can do better : https://paularmstrong.github.io/swig/docs/api/#setDefaults
  */
 function fetchData () {
   var deferred = q.defer(),
