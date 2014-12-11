@@ -31,15 +31,17 @@
   margin: 0;
 }
 .home-photoset {
-  height: 33vh;
+  height: 25em;
   color: white;
   font-size: 10px;
   position: relative;
   overflow: hidden;
   background-size: 100% 100%;
+  box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
 .home-photoset-date {
   font-size: 4em;
+  text-shadow: -1px -1px 1px rgba(0,0,0,.2), 1px 1px 1px rgba(0,0,0,.1);
 }
 .home-photoset-description {
   position: absolute;
@@ -47,7 +49,7 @@
   left: 0;
   right: 0;
   background: rgba(0,0,0,.4);
-  height: 20vh;
+  height: 20em;
   transition: top .2s ease-in;
   padding: 5px;
 }
@@ -58,7 +60,7 @@
   font-size: 2em;
 }
 .home-photoset:hover .home-photoset-description {
-  top: 13vh;
+  top: 5em;
 }
 /* Photoset */
 #gallery figure {
