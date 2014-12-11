@@ -41,7 +41,7 @@
         <div class="row">
         {% for photo in photos %}
           <figure
-            class="columns small-{% if isFullWidth(photo) %}12{% else %}6{% endif %} {% if mustBreakLine(photo) %}clear{% endif %}">
+            class="columns small-{% if photo.landscape || (photos[loop.index0-1] && photos[loop.index0-1].landscape) && true && (!photos[loop.index] || photos[loop.index].landscape) %}12{% else %}6{% endif %}">
             <a
               href="{{ photo.url_o }}"
               data-size="{{ photo.width }}x{{ photo.height }}">
