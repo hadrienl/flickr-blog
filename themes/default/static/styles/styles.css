@@ -1,13 +1,25 @@
 .off-canvas-wrap {
   background: #eee;
 }
+.main-section {
+  overflow: auto;
+  height: 94vh;
+  -webkit-overflow-scrolling: touch;
+}
 .breadcrumbs {
   background: none;
   border: none;
+  white-space: nowrap;
+  padding: 0;
+  overflow: scroll;
+  text-align: left;
+  -webkit-overflow-scrolling: touch;
 }
 .breadcrumbs a {
   font-size: 1em;
   line-height: 1.8em;
+  float: none;
+  display: inline-block;
 }
 .breadcrumbs > *.current {
   color: white;
