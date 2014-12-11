@@ -33,11 +33,30 @@
       size = el.getAttribute('data-size').split('x');
 
       // create slide object
-      item = {
-        src: el.getAttribute('href'),
-        w: parseInt(size[0], 10),
-        h: parseInt(size[1], 10)
-      };
+      var o_w = parseInt(size[0], 10),
+        o_h = parseInt(size[1], 10),
+        w, h;
+
+      if (navigator.userAgent.toLowerCase().match('mobile')) {
+        if (o_w > o_h) {
+          w = 500;
+          h = w / o_w * o_h;
+        } else {
+          h = 500;
+          w = h * o_w / o_h;
+        }
+        item = {
+          src: el.getElementsByTagName('img')[0].getAttribute('src'),
+          w: w,
+          h: h
+        };
+      } else {
+        item = {
+          src: el.getAttribute('href'),
+          w: o_w,
+          h: o_h
+        };
+      }
 
       item.el = el; // save link to element for getThumbBoundsFn
 
