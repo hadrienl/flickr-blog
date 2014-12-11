@@ -1,3 +1,4 @@
+/* Common */
 .off-canvas-wrap {
   background: #eee;
 }
@@ -25,6 +26,41 @@
   color: white;
 }
 
+/* Home */
+.row.home-photosets {
+  margin: 0;
+}
+.home-photoset {
+  height: 33vh;
+  color: white;
+  font-size: 10px;
+  position: relative;
+  overflow: hidden;
+  background-size: 100% 100%;
+}
+.home-photoset-date {
+  font-size: 4em;
+}
+.home-photoset-description {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,.4);
+  height: 20vh;
+  transition: top .2s ease-in;
+  padding: 5px;
+}
+.home-photoset-description * {
+  font-size: 1.3em;
+}
+.home-photoset-description h2 {
+  font-size: 2em;
+}
+.home-photoset:hover .home-photoset-description {
+  top: 13vh;
+}
+/* Photoset */
 #gallery figure {
   display: inline-block;
   padding: 0;

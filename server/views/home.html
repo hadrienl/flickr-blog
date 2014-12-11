@@ -16,28 +16,28 @@
   </div>
   {% else %}
   <div
-    class="row">
+    class="row home-photosets">
     {% for photoset in photosets %}
     <article
-      class="column large-4">
-      <h2>
-        <a href="{{ photoset.getUrl() }}">
-          {{ photoset.title }}
-        </a>
-      </h2>
-      <p>
-        <a href="{{ photoset.getUrl() }}">
-          <img src="{{ photoset.cover.getSrc('s') }}">
-        </a>
-      </p>
-      <p>
+      class="column small-12 medium-6 large-4 home-photoset"
+      style="background-image: url('{{ photoset.cover.getSrc('m') }}')">
+      <p
+        class="home-photoset-date">
         <time
           datetime="{{ photoset.date_create }}">
-          {{ photoset.date_create|date('Y-m-d') }}
+          {{ photoset.date_create|date('d M') }}
         </time>
       </p>
-      <div>
-        {{ photoset.description | truncate(200) | markdown | raw }}
+      <div
+        class="home-photoset-description">
+        <h2>
+          <a href="{{ photoset.getUrl() }}">
+            {{ photoset.title }}
+          </a>
+        </h2>
+        <div>
+          {{ photoset.description | truncate(200) | markdown | raw }}
+        </div>
       </div>
     </article>
     {% endfor %}

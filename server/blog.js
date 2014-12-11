@@ -12,12 +12,12 @@ module.exports = function (app) {
 
 function home (req, res) {
   var page = req.params.page || 1,
-    perPage = 10,
+    perPage = 12,
     photosets,
     data = {
       pageType: 'home',
       page: page,
-      perPage: 10
+      perPage: perPage
     };
 
   fetchData()
