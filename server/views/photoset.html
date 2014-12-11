@@ -24,11 +24,11 @@
       class="row">
       <div
         id="gallery"
-        class="columns large-8 small-block-grid-2">
+        class="columns large-8">
         <div class="row">
         {% for photo in photos %}
           <figure
-            class="column large-{% if isFullWidth(photo) %}12{% else %}6{% endif %} {% if mustBreakLine(photo) %}clear{% endif %}">
+            class="columns small-{% if isFullWidth(photo) %}12{% else %}6{% endif %} {% if mustBreakLine(photo) %}clear{% endif %}">
             <a
               href="{{ photo.url_o }}"
               data-size="{{ photo.width }}x{{ photo.height }}">
