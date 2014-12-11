@@ -118,6 +118,12 @@ function fetchData () {
     })
     .then(function (_data) {
       data.recentPosts = _data;
+      return database
+        .Config
+        .get('url');
+    })
+    .then(function (url) {
+      data.siteUrl = url;
       deferred.resolve(data);
     });
 

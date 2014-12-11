@@ -50,3 +50,7 @@
 #gallery figure.clear {
   clear: both;
 }
+.share-iframe {
+  display: inline-block;
+  vertical-align: top;
+}
