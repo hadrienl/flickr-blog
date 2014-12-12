@@ -20,10 +20,14 @@ function home (req, res) {
       perPage: perPage
     };
 
-  PhotoSet
-    .getAll({
-      page: page,
-      perPage: perPage
+  fetchData()
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      return PhotoSet
+        .getAll({
+          page: page,
+          perPage: perPage
+        });
     })
     .then(function (_data) {
       data.photosets = _data;
@@ -55,8 +59,12 @@ function page (req, res, next) {
       pageType: 'photoset'
     };
 
-  PhotoSet
-    .getFromSlug(slug)
+  fetchData()
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      return PhotoSet
+        .getFromSlug(slug);
+    })
     .then(function (_data) {
       data.photoset = _data;
       if (data.photoset.date_create.getFullYear() !== year ||
@@ -78,4 +86,39 @@ function page (req, res, next) {
         });
       }
     });
+}
+
+/**
+ * Fetch common data for every pages
+ */
+function fetchData () {
+  var deferred = q.defer(),
+    data = {};
+console.log('reload');
+  database
+    .Config
+    .get('siteTitle')
+    .then(function (siteTitle) {
+      data.siteTitle = siteTitle;
+      return database
+        .Config
+        .get('url');
+    })
+    .then(function (siteUrl) {
+      data.siteUrl = siteUrl;
+      return PhotoSet
+        .getAll({
+          orderBy: 'date_create',
+          orderAsc: true
+        });
+    })
+    .then(function (recentPosts) {
+      data.recentPosts = recentPosts;
+      deferred.resolve(data);
+    })
+    .catch(function (err) {
+      deferred.reject(err);
+    });
+
+  return deferred.promise;
 }

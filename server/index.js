@@ -22,7 +22,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require('./auth')(app);
 require('./blog')(app);
 require('./settings')(app);
-app.get(require('./common-locals')(swig));
 
 app.use(express.static(__dirname + '/../bower_components'));
 app.use(express.static(__dirname + '/../themes/default/static'));
