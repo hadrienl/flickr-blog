@@ -40,13 +40,16 @@ module.exports = function (app) {
         Config
           .get('collectionId'),
         Config
-          .get('coverTag')
+          .get('coverTag'),
+        Config
+          .get('siteTitle')
       ])
       .then(function (data) {
         collections = data[0];
         config.url = data[1];
         config.collectionId = data[2];
         config.coverTag = data[3];
+        config.siteTitle = data[4];
         res.render('admin/settings', {
           user: req.user,
           config: config,
@@ -64,7 +67,8 @@ module.exports = function (app) {
     Config.set({
         url: req.body.url,
         collectionId: req.body.collectionId,
-        coverTag: req.body.coverTag
+        coverTag: req.body.coverTag,
+        siteTitle: req.body.siteTitle
       })
     .then(function () {
       flickr
