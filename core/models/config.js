@@ -9,23 +9,17 @@ module.exports = function (sequelize) {
 
   Config.set = function (data) {
     return q.all(Object.keys(data).map(function (k) {
-      var deferred = q.defer();
-
-      var config = Config.build({
-        label: k,
-        value: data[k]
-      });
-      config
-        .save()
-        .complete(function (err, res) {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            deferred.resolve(res);
+      return Config
+        .find({ where: { label: k } })
+        .then(function (config) {
+          if (!config) {
+            config = Config.build({
+              label: k
+            });
           }
+          config.value = data[k];
+          return config.save();
         });
-
-      return deferred.promise;
     }));
   };
 
