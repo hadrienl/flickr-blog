@@ -9,6 +9,7 @@
 <script src="/photoswipe/dist/photoswipe.js"></script>
 <script src="/photoswipe/dist/photoswipe-ui-default.js"></script> 
 <script src="/scripts/gallery.js"></script>
+<script src="/scripts/images.js"></script>
 {# Google+ #}
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
   {lang: 'fr'}
@@ -45,10 +46,18 @@
             <a
               href="{{ photo.url_o }}"
               data-size="{{ photo.width }}x{{ photo.height }}">
+              <span
+                class="img-placeholder"
+                style="padding-top: {% if photo.landscape %}{{ photo.height / photo.width * 100 }}{% else %}{{ photo.width / photo.height * 100 }}{% endif %}%;"
+                data-src="{{ photo.url_m }}"
+                data-alt="{{ photo.tags }}"
+                data-title="{{ photo.title }}"></span>
+              <noscript>
               <img
                 src="{{ photo.url_m }}"
                 alt="{{ photo.tags }}"
                 title="{{ photo.title }}">
+              </noscript>
             </a>
           </figure>
         {% endfor %}

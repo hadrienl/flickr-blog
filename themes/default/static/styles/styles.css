@@ -74,12 +74,30 @@
   width: 100%;
   padding: 5px;
 }
+.js .img-placeholder {
+  width: 100%;
+  display: inline-block;
+  background: url('/images/ajax-loader.gif') no-repeat center center;
+}
+#gallery figure a span,
+#gallery figure a img {
+  transition: opacity .2s ease-in;
+}
+#gallery figure a.displayed .img-placeholder {
+  opacity: 0;
+}
 #gallery figure img {
   padding: 5px;
   margin: 0;
   background: white;
   border: 1px solid rgba(0,0,0,.1);
   width: 100%;
+}
+.js #gallery figure img {
+  opacity: 0
+}
+#gallery figure a.displayed img {
+  opacity: 1;
 }
 #gallery figure.full-width {
   width: 98%;
