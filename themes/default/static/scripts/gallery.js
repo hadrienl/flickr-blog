@@ -1,5 +1,6 @@
 (function(element) {
 'use strict';
+  var gallery;
 
   element.setAttribute('data-pswp-uid', 1);
   element.onclick = onThumbnailsClick;
@@ -154,7 +155,6 @@
 
   function openPhotoSwipe(index, galleryElement, disableAnimation) {
     var pswpElement = document.querySelectorAll('.pswp')[0],
-      gallery,
       options,
       items;
 
@@ -186,4 +186,15 @@
     gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
     gallery.init();
   }
+
+  window.addEventListener('keydown', function (e) {
+    try {
+      if (39 === e.keyCode) {
+        return gallery.next();
+      }
+      if (37 === e.keyCode) {
+        return gallery.prev();
+      }
+    } catch (e) {}
+  })
 })(document.getElementById('gallery'));
