@@ -88,6 +88,10 @@ function page (req, res, next, app) {
         res.redirect(data.photoset.getUrl());
         throw 'redirect';
       }
+      return data.photoset.getCover();
+    })
+    .then(function (_data) {
+      data.photoset.cover = _data;
       return data.photoset.getPhotos();
     })
     .then(function (_data) {
