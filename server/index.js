@@ -24,6 +24,7 @@ require('./blog')(app);
 require('./settings')(app);
 
 app.use(express.static(__dirname + '/../bower_components'));
+// TODO find a way to serve all themes static files
 app.use(express.static(__dirname + '/../themes/default/static'));
 
 function init () {

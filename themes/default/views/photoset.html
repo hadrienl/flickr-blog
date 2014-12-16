@@ -29,7 +29,7 @@
 <div class="row">
   <div class="columns">
     <h1>
-      {{ photoset.title }}
+      {{ photoset.title }} {{ prout }}
     </h1>
     <div>
       {{ photoset.description | markdown | raw}}
@@ -41,8 +41,11 @@
         class="columns large-8">
         <div class="row">
         {% for photo in photos %}
+          {% if photo.startRow %}
+          <div class="row">
+          {% endif %}
           <figure
-            class="columns small-{% if photo.landscape || (photos[loop.index0-1] && photos[loop.index0-1].landscape) && true && (!photos[loop.index] || photos[loop.index].landscape) %}12{% else %}6{% endif %}">
+            class="columns small-{% if photo.colWidth == 2 %}12{% else %}6{% endif %}">
             <a
               href="{{ photo.url_o }}"
               data-size="{{ photo.width }}x{{ photo.height }}">
@@ -60,6 +63,9 @@
               </noscript>
             </a>
           </figure>
+          {% if photo.endRow %}
+          </div>
+          {% endif %}
         {% endfor %}
         </div>
       </div>

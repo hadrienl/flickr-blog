@@ -5,12 +5,18 @@ var database = require('../core/database'),
 
 module.exports = function (app) {
   var photosets;
-  app.get('/', home);
-  app.get('/page-:page', home);
-  app.get(/^\/([0-9]{4})\/([0-9]{2})\/([^\/]+)\.html/, page);
+  app.get('/', function (req, res, next) {
+    return home(req, res, next, app);
+  });
+  app.get('/page-:page', function (req, res, next) {
+    return home(req, res, next, app);
+  });
+  app.get(/^\/([0-9]{4})\/([0-9]{2})\/([^\/]+)\.html/, function (req, res, next) {
+    return page(req, res, next, app);
+  });
 };
 
-function home (req, res) {
+function home (req, res, next, app) {
   var page = req.params.page || 1,
     perPage = 12,
     photosets,
@@ -45,11 +51,21 @@ function home (req, res) {
     })
     .then(function (_data) {
       data.count = _data;
-      res.render('home', data);
+      return loadThemeData(app, 'page', data);
+    })
+    .then(function (data) {
+      res.render(__dirname + '/../themes/' + data.theme + '/views/home', data);
+    })
+    .catch(function (err) {
+      if (err !== 'redirect') {
+        res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
+          error: err.message || err
+        });
+      }
     });
 }
 
-function page (req, res, next) {
+function page (req, res, next, app) {
   var year = +req.params[0],
     month = +req.params[1],
     slug = req.params[2],
@@ -76,12 +92,15 @@ function page (req, res, next) {
     })
     .then(function (_data) {
       data.photos = _data;
-      res.render('photoset', data);
+      return loadThemeData(app, 'photoset', data);
+    })
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      res.render(__dirname + '/../themes/' + data.theme + '/views/photoset', data);
     })
     .catch(function (err) {
-      console.error(err);
       if (err !== 'redirect') {
-        res.render('error', {
+        res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
           error: err.message || err
         });
       }
@@ -94,12 +113,18 @@ function page (req, res, next) {
 function fetchData () {
   var deferred = q.defer(),
     data = {};
-console.log('reload');
+
   database
     .Config
     .get('siteTitle')
     .then(function (siteTitle) {
       data.siteTitle = siteTitle;
+      return database
+        .Config
+        .get('theme');
+    })
+    .then(function (theme) {
+      data.theme = theme || 'default';
       return database
         .Config
         .get('url');
@@ -121,4 +146,22 @@ console.log('reload');
     });
 
   return deferred.promise;
+}
+
+function loadThemeData (app, type, data) {
+  try {
+    var themeEngine = require('../themes/' + data.theme);
+    if (!themeEngine[type]) {
+      return q.resolve(data);
+    }
+    themeData = themeEngine[type](data);
+    if (themeData.then) {
+      return themeData;
+    } else {
+      return q.resolve(_.merge(themeData, data));
+    }
+  } catch (e) {
+    console.log(e);
+    return q.resolve(data);
+  }
 }
