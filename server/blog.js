@@ -96,6 +96,15 @@ function page (req, res, next, app) {
     })
     .then(function (_data) {
       data.photos = _data;
+
+      data.photoset.tags = [];
+      _.each(data.photos, function (photo) {
+        _.each(photo.tags.split(/ /), function (tag) {
+          if (!_.contains(data.photoset.tags, tag)) {
+            data.photoset.tags.push(tag);
+          }
+        });
+      });
       return loadThemeData(app, 'photoset', data);
     })
     .then(function (_data) {

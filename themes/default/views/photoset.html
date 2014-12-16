@@ -73,6 +73,10 @@
         </div>
         <div
           class="columns large-4">
+          <p class="description">
+            Published on {{ photoset.date_create|date('j F Y') }}{% if photoset.tags %} under
+            {% for tag in photoset.tags %}#{{ tag }}{% if !loop.last %}, {% endif %}{% endfor %}{% endif %}
+          </p>
           <h4>Share</h4>
           <div
             class="share-iframe">
