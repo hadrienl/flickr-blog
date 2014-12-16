@@ -2,6 +2,10 @@
 .off-canvas-wrap {
   background: #eee;
 }
+.tab-bar,
+.tab-bar .left-small {
+  height: 6vh;
+}
 .main-section {
   overflow: auto;
   height: 94vh;
