@@ -1,5 +1,5 @@
 /* Common */
-.off-canvas-wrap {
+body {
   background: #eee;
 }
 .tab-bar,
@@ -67,6 +67,13 @@
   top: 5em;
 }
 /* Photoset */
+.cover {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background-size: 100%;
+  opacity: .1;
+}
 #gallery figure {
   display: inline-block;
   padding: 0;

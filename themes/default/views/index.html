@@ -8,6 +8,11 @@
   {% block head %}{% endblock %}
 </head>
 <body>
+  {% if photoset.cover %}
+  <div
+    class="cover"
+    style="background-image: url('{{ photoset.cover.url_m }}');"></div>
+  {% endif %}
   <div class="off-canvas-wrap" data-offcanvas>
     <div class="inner-wrap">
       <nav class="tab-bar">
@@ -56,8 +61,6 @@
       <section class="main-section">
         {% block body %}{% endblock %}
       </section>
-
-      <a class="exit-off-canvas"></a>
 
     </div>
   </div>
