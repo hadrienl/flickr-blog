@@ -2,13 +2,27 @@
 body {
   background: #eee;
 }
-.tab-bar,
-.tab-bar .left-small {
-  height: 6vh;
+.cover {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background-size: 100%;
+  opacity: .2;
+  -webkit-filter: blur(10px); 
+  -moz-filter: blur(10px); 
+  filter: blur(10px); 
+}
+.tab-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
 }
 .main-section {
   overflow: auto;
-  height: 94vh;
+  height: 100vh;
+  padding-top: 2.8125rem;
   -webkit-overflow-scrolling: touch;
 }
 .breadcrumbs {
@@ -67,12 +81,8 @@ body {
   top: 5em;
 }
 /* Photoset */
-.cover {
-  position: absolute;
-  height: 100vh;
-  width: 100%;
-  background-size: 100%;
-  opacity: .1;
+.photoset .description {
+  color: gray;
 }
 #gallery figure {
   display: inline-block;
