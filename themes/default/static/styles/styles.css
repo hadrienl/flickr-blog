@@ -2,7 +2,7 @@
 body {
   background: #eee;
 }
-.cover {
+.photoset-cover {
   position: absolute;
   height: 100vh;
   width: 100%;
@@ -12,6 +12,7 @@ body {
   -moz-filter: blur(10px); 
   filter: blur(10px); 
 }
+
 .tab-bar {
   position: fixed;
   top: 0;
@@ -131,3 +132,15 @@ body {
   display: inline-block;
   vertical-align: top;
 }
+
+@media screen and (max-width: 640px) {
+  .photoset-cover {
+    display: none;
+  }
+}
+@media screen and (max-width: 1000px) {
+  #gallery {
+    overflow: hidden;
+  }
+}
+
