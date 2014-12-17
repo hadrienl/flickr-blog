@@ -9,7 +9,7 @@ function Photo (data) {
   Object.defineProperties(this, {
     orientation: {
       get: function () {
-        if (this.width > this.height) {
+        if (this.width >= this.height) {
           return 'landscape';
         }
         return 'portrait';
