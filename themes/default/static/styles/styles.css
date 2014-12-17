@@ -49,6 +49,23 @@ body {
 .row.home-photosets {
   margin: 0;
 }
+.home-photosets .previous,
+.home-photosets .next {
+  padding: 0;
+  margin: 0;
+}
+.home-photosets .previous a,
+.home-photosets .next a {
+  display: block;
+  width: 100%;
+  height: .5em;
+  overflow: hidden;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 3em;
+  line-height: .5em;
+  color: gray;
+}
 .home-photoset {
   height: 25em;
   color: white;

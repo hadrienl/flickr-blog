@@ -31,6 +31,13 @@
   {% else %}
   <div
     class="row home-photosets">
+    {% if page - 1 > 0 %}
+    <p
+      class="column small-12 previous">
+      <a
+        href="{% if page - 1 == 0 %}/{% else %}/page-{{ page - 1 }}{% endif %}">Previous</a>
+    </p>
+    {% endif %}
     {% for photoset in photosets %}
     <article
       class="column small-12 medium-6 large-4 home-photoset"
@@ -55,26 +62,14 @@
       </div>
     </article>
     {% endfor %}
-  </div>
-  <div
-    class="row pagination">
-    {% if page - 1 > 0 %}
-    <div class="column large-4">
-      {% if page - 1 == 1 %}
-      <a href="/">Previous</a>
-      {% else %}
-      <a href="/page-{{ +page - 1 }}">Previous</a>
-      {% endif %}
-    </div>
-    {% endif %}
-    <div class="column large-4 right">
-      {% if page * perPage < count %}
-      <a href="/page-{{ +page + 1 }}">Next</a>
-      {% endif %}
-    </div>
-  </div>
-
+    {% if page * perPage < count %}
+    <p
+      class="column small-12 next">
+      <a
+        href="/page-{{ +page + 1 }}">Next</a>
+    </p>
     {% endif %}
   </div>
+  {% endif %}
 </div>
 {% endblock %}
