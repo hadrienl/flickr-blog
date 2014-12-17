@@ -144,3 +144,11 @@ body {
   }
 }
 
+.main-section footer {
+  text-align: center;
+  opacity: .6;
+  transition: opacity .2s ease-in;
+}
+.main-section footer:hover {
+  opacity: 1;
+}
