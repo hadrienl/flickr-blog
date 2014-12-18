@@ -40,8 +40,10 @@
     {% endif %}
     {% for photoset in photosets %}
     <article
-      class="column small-12 medium-6 large-4 home-photoset"
-      style="background-image: url('{{ photoset.cover.getSrc('m') }}')">
+      class="column small-12 medium-6 large-4 home-photoset">
+      <div
+        class="cover"
+        style="background-image: url('{{ photoset.cover.getSrc('m') }}')"></div>
       <p
         class="home-photoset-date">
         <time
