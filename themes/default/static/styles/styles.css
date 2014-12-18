@@ -19,6 +19,17 @@ body {
   left: 0;
   right: 0;
   z-index: 1;
+  background: transparent;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.50)), to(rgba(0, 0, 0, 0.80)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#000000', EndColorStr='#000000');
+}
+.tab-bar a {
+  color: white;
 }
 .main-section {
   overflow: auto;
@@ -78,6 +89,8 @@ body {
 .home-photoset-date {
   font-size: 4em;
   text-shadow: -1px -1px 1px rgba(0,0,0,.2), 1px 1px 1px rgba(0,0,0,.1);
+  z-index: 1;
+  position: relative;
 }
 .home-photoset-description {
   position: absolute;
@@ -85,7 +98,7 @@ body {
   left: 0;
   right: 0;
   background: rgba(0,0,0,.4);
-  height: 20em;
+  height: 22em;
   transition: top .2s ease-in;
   padding: 5px;
 }
@@ -96,7 +109,7 @@ body {
   font-size: 2em;
 }
 .home-photoset:hover .home-photoset-description {
-  top: 5em;
+  top: 3em;
 }
 /* Photoset */
 .photoset .description {
