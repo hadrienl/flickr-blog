@@ -58,12 +58,13 @@
                   data-alt="{{ photo.tags }}"
                   data-title="{{ photo.title }}"></span>
                 <noscript>
-                <img
-                  src="{{ photo.url_m }}"
-                  alt="{{ photo.tags }}"
-                  title="{{ photo.title }}">
+                  <img
+                    src="{{ photo.url_m }}"
+                    alt="{{ photo.tags }}"
+                    title="{{ photo.title }}">
                 </noscript>
               </a>
+              <figcaption>{{ photo.title }}</figcaption>
             </figure>
             {% if photo.endRow %}
             </div>

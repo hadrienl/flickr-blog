@@ -59,14 +59,8 @@
         };
       }
 
+      item.title = el.parentNode.getElementsByTagName('figcaption')[0].innerText;
       item.el = el; // save link to element for getThumbBoundsFn
-
-      if(childElements.length > 0) {
-        item.msrc = childElements[0].getAttribute('src'); // thumbnail url
-        if(childElements.length > 1) {
-          item.title = childElements[1].innerHTML; // caption (contents of figure)
-        }
-      }
 
       items.push(item);
     }
@@ -195,6 +189,6 @@
       if (37 === e.keyCode) {
         return gallery.prev();
       }
-    } catch (e) {}
-  })
+    } catch (err) {}
+  });
 })(document.getElementById('gallery'));
