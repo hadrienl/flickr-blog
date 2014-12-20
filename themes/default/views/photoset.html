@@ -50,7 +50,9 @@
               class="columns small-{% if photo.colWidth == 2 %}12{% else %}6{% endif %}">
               <a
                 href="{{ photo.url_o }}"
-                data-size="{{ photo.width }}x{{ photo.height }}">
+                data-size="{{ photo.width }}x{{ photo.height }}"
+                data-src="{{ photo.url_o }}"
+                data-src-medium="{{ photo.url_m }}">
                 <span
                   class="img-placeholder"
                   style="padding-top: {% if photo.landscape %}{{ photo.height / photo.width * 100 }}{% else %}{{ photo.width / photo.height * 100 }}{% endif %}%;"

@@ -47,13 +47,13 @@
           w = h * o_w / o_h;
         }
         item = {
-          src: el.getElementsByTagName('img')[0].getAttribute('src'),
+          src: el.dataset.srcMedium,
           w: w,
           h: h
         };
       } else {
         item = {
-          src: el.getAttribute('href'),
+          src: el.dataset.src,
           w: o_w,
           h: o_h
         };
