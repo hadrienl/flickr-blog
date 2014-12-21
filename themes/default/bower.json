@@ -1,0 +1,21 @@
+{
+  "name": "FlickrBlog default theme",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/hadrienl/flickr-blog",
+  "authors": [
+    "Hadrien Lanneau <hadrien@lanneau.me>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "photoswipe": "~4.0.2",
+    "foundation": "~5.5.0"
+  }
+}
