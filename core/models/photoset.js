@@ -32,8 +32,7 @@ module.exports = function (sequelize) {
             photoset = PhotoSet.build();
             throw 'photoset does not exist';
           }
-          if (data.date_update > photoset.date_update ||
-            data.title !== slugify(data.title)) {
+          if (data.date_update > photoset.date_update) {
             throw 'photoset had changed';
           }
           deferred.resolve(photoset);
