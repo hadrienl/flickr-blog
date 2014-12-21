@@ -32,7 +32,8 @@ module.exports = function (sequelize) {
             photoset = PhotoSet.build();
             throw 'photoset does not exist';
           }
-          if (data.date_update > photoset.date_update) {
+          if (data.date_update > photoset.date_update ||
+            data.title !== slugify(data.title)) {
             throw 'photoset had changed';
           }
           deferred.resolve(photoset);
@@ -91,11 +92,12 @@ function extractDateFromTitle(data) {
   data.date_create = date;
 }
 
-function slugify (string) {
-  return string
+function slugify (str) {
+  return require('slugify')(str)
     .toLowerCase()
-    .replace(/[^\w]+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/\W/g, '-')
+    .replace(/\-+/g, '-')
+    .replace(/(^\-)|(\-$)/, '');
 }
 
 function cleanDescription (description) {
