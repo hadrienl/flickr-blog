@@ -84,7 +84,7 @@ function page (req, res, next, app) {
     .then(function (_data) {
       data.photoset = _data;
       if (data.photoset.date_create.getFullYear() !== year ||
-          data.photoset.date_create.getMonth() !== month) {
+          data.photoset.date_create.getMonth() + 1 !== month) {
         res.redirect(data.photoset.getUrl());
         throw 'redirect';
       }

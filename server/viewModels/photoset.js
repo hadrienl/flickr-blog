@@ -8,7 +8,7 @@ function PhotoSet (data) {
 }
 
 PhotoSet.prototype.getUrl = function () {
-  var month = this.date_create.getMonth();
+  var month = this.date_create.getMonth() + 1;
   return '/' + this.date_create.getFullYear() +
     '/' + (month > 9 ? month : '0' + month) +
     '/' + this.slug + '.html';
