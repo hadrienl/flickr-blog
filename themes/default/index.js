@@ -14,7 +14,20 @@ module.exports = {
   photoset: function (data) {
     // Make two smart columns of photos
     sortPhotos(data.photos);
-    return data;
+
+    var deferred = q.defer();
+
+    // Load next and previous links
+    q.all([
+      data.photoset.getNewerPhotoset(),
+      data.photoset.getOlderPhotoset()])
+      .then(function (_data) {
+        data.newer = _data[0];
+        data.older = _data[1];
+        deferred.resolve(data);
+      });
+
+    return deferred.promise;
   }
 };
 

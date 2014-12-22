@@ -208,6 +208,9 @@ header {
   #gallery {
     overflow: hidden;
   }
+  .photoset .pagination-top {
+    display: none;
+  }
 }
 
 .main-section footer {

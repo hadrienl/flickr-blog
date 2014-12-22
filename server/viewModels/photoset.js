@@ -38,17 +38,48 @@ PhotoSet.prototype.getPhotosCount = function () {
   var deferred = q.defer();
 
   database
-      .Photo
-      .findAndCountAll({
-        where: { PhotoSetId: this.$data.id },
-        limit: 1
-      })
-      .then(function (data) {
-        deferred.resolve(data.count);
-      });
+    .Photo
+    .findAndCountAll({
+      where: { PhotoSetId: this.$data.id },
+      limit: 1
+    })
+    .then(function (data) {
+      deferred.resolve(data.count);
+    });
 
   return deferred.promise;
 };
+
+PhotoSet.prototype.getNewerPhotoset = function () {
+  return getNavigation(this.date_create);
+};
+
+PhotoSet.prototype.getOlderPhotoset = function () {
+  return getNavigation(this.date_create, true);
+};
+
+function getNavigation (date, older) {
+  var deferred = q.defer();
+
+  database
+    .PhotoSet
+    .find({
+      where: ['date_create ' + (older ? '<' : '>') + ' ?', date],
+      limit: 1
+    })
+    .then(function (photoset) {
+      if (photoset) {
+        deferred.resolve(new PhotoSet(photoset));
+      } else {
+        deferred.resolve(null);
+      }
+    })
+    .catch(function (err) {
+      deferred.reject(err);
+    });
+
+  return deferred.promise;
+}
 
 PhotoSet.prototype.getCover = function () {
   var coverTag,
