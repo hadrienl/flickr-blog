@@ -34,6 +34,22 @@ PhotoSet.prototype.getPhotos = function () {
   return deferred.promise;
 };
 
+PhotoSet.prototype.getPhotosCount = function () {
+  var deferred = q.defer();
+
+  database
+      .Photo
+      .findAndCountAll({
+        where: { PhotoSetId: this.$data.id },
+        limit: 1
+      })
+      .then(function (data) {
+        deferred.resolve(data.count);
+      });
+
+  return deferred.promise;
+};
+
 PhotoSet.prototype.getCover = function () {
   var coverTag,
     $data = this.$data;

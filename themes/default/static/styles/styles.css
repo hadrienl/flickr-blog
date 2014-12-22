@@ -87,6 +87,7 @@ header {
   position: relative;
   overflow: hidden;
   padding: 0;
+  cursor: pointer;
 }
 .home-photoset .cover {
   width: 100%;
@@ -106,29 +107,42 @@ header {
 .home-photoset-date {
   font-size: 4em;
   text-shadow: -1px -1px 1px rgba(0,0,0,.2), 1px 1px 1px rgba(0,0,0,.1);
-  z-index: 1;
   position: absolute;
   top: 0;
   left: .5em;
+  color: white;
+  transition: color .2s ease-in;
 }
-.home-photoset-description {
+.home-photoset:hover .home-photoset-date {
+  color: rgba(255,255,255,.4);
+}
+.home-photoset-details {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   background: rgba(0,0,0,.4);
-  height: 22em;
+  height: 12.5em;
   transition: top .2s ease-in;
   padding: 5px;
 }
-.home-photoset-description * {
+.home-photoset-title {
+  font-size: 2em;
+  position: absolute;
+  bottom: 0;
+}
+.home-photoset-title a {
+  color: white;
   font-size: 1.3em;
 }
-.home-photoset-description h2 {
-  font-size: 2em;
+.home-photoset:hover .home-photoset-details {
+  top: 12.5em;
 }
-.home-photoset:hover .home-photoset-description {
-  top: 3em;
+.home-photoset-count {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-size: 1.3em;
 }
 /* Photoset */
 .photoset .description {

@@ -51,9 +51,10 @@ function home (req, res, next, app) {
     })
     .then(function (_data) {
       data.count = _data;
-      return loadThemeData(app, 'page', data);
+      return loadThemeData(app, 'home', data);
     })
-    .then(function (data) {
+    .then(function (_data) {
+      data = _.merge(data, _data);
       res.render(__dirname + '/../themes/' + data.theme + '/views/home', data);
     })
     .catch(function (err) {
@@ -171,7 +172,7 @@ function loadThemeData (app, type, data) {
     if (themeData.then) {
       return themeData;
     } else {
-      return q.resolve(_.merge(themeData, data));
+      return q.resolve(themeData);
     }
   } catch (e) {
     console.log(e);

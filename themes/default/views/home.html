@@ -48,19 +48,19 @@
         class="home-photoset-date">
         <time
           datetime="{{ photoset.date_create }}">
-          {{ photoset.date_create|date('d M') }}
+          {{ photoset.date_create|date('d M') }} {{ photoset.photos.length }}
         </time>
       </p>
       <div
-        class="home-photoset-description">
-        <h2>
+        class="home-photoset-details">
+        <h2
+          class="home-photoset-title">
           <a href="{{ photoset.getUrl() }}">
             {{ photoset.title }}
           </a>
         </h2>
-        <div>
-          {{ photoset.description | truncate(200) | markdown | raw }}
-        </div>
+        <div
+          class="home-photoset-count">{{ photoset.count }} photos</div>
       </div>
     </article>
     {% endfor %}

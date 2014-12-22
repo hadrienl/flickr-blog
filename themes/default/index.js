@@ -1,6 +1,15 @@
+var q = require('q');
+
 module.exports = {
   home: function (data) {
-    return data;
+    return q.all(data.photosets.map(function (photoset) {
+      return photoset
+        .getPhotosCount()
+        .then(function (count) {
+          photoset.count = count;
+          return photoset;
+        });
+    }));
   },
   photoset: function (data) {
     // Make two smart columns of photos
