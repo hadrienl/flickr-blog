@@ -22,11 +22,12 @@
   {% else %}
   <div
     class="row home-photosets">
-    {% if page - 1 > 0 %}
+    {% if previousPage %}
     <p
       class="column small-12 previous">
       <a
-        href="{% if page - 1 == 0 %}/{% else %}/page-{{ page - 1 }}{% endif %}">Previous</a>
+        href="{{ previousPage }}"
+        data-pagination-previous="{{ previousPage }}.json">Previous</a>
     </p>
     {% endif %}
     <div data-component="home-photosets">
@@ -65,11 +66,12 @@
       </article>
       {% endfor %}
     </div>
-    {% if page * perPage < count %}
+    {% if nextPage %}
     <p
       class="column small-12 next">
       <a
-        href="/page-{{ +page + 1 }}">Next</a>
+        href="{{ nextPage }}"
+        data-pagination-next="{{ nextPage }}.json">Next</a>
     </p>
     {% endif %}
   </div>

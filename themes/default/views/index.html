@@ -14,60 +14,10 @@
     class="photoset-cover"
     style="background-image: url('{{ photoset.cover.url_m }}');"></div>
   {% endif %}
-  <div class="off-canvas-wrap" data-offcanvas>
-    <div class="inner-wrap">
-      <nav class="tab-bar">
-        <section class="left-small">
-          <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
-        </section>
-
-        <header class="right tab-bar-section">
-          <nav class="breadcrumbs">
-            <a href="/">
-              {{ siteTitle }}
-            </a>
-            {% if photoset %}
-            <a
-              class="current">
-              {{ photoset.title }}
-            </a>
-            {% endif %}
-          </nav>
-        </header>
-      </nav>
-
-      <aside class="left-off-canvas-menu">
-        {% if recentPosts.length %}
-        <ul class="off-canvas-list">
-          <li><a href="/"><strong>{{ siteTitle }}</strong></a></li>
-          <li><label>Recent posts</label></li>
-          {% for post in recentPosts %}
-          <li>
-            <a href="{{ post.getUrl() }}">{{ post.title }}</a>
-          </li>
-          {% endfor %}
-          <li><a href="#">...</a></li>
-        </ul>
-        {% endif %}
-        {% if tags.length %}
-        <ul class="off-canvas-list">
-          <li><label>Tags</label></li>
-          {% for tag in tags %}
-          <li><a href="{{ tag.getUrl() ">#{{ tag.label }}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </aside>
-
-      <section class="main-section">
-        {% block body %}{% endblock %}
-        <footer>
-          <p>Generated with <a href="https://github.com/hadrienl/flickr-blog">FlickrBlog</a> by <a href="http://hadrien.eu">Hadrien.eu</a></p>
-        </footer>
-      </section>
-
-    </div>
-  </div>
+  {% block body %}{% endblock %}
+  <footer>
+    <p>Generated with <a href="https://github.com/hadrienl/flickr-blog">FlickrBlog</a> by <a href="http://hadrien.eu">Hadrien.eu</a></p>
+  </footer>
   
   <script src="/components/jquery/dist/jquery.min.js"></script>
   <script src="/components/foundation/js/foundation.min.js"></script>

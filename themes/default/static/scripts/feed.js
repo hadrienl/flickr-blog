@@ -1,14 +1,3 @@
-// Open photoset on clicking anywhere on article block
-(function (els) {
-  [].forEach.call(els, function (el) {
-    el.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.location = this.querySelector('a').getAttribute('href');
-    });
-  });
-})(document.querySelectorAll('article'));
-
-
 (function () {
   'use strict';
 
@@ -74,7 +63,6 @@
     return str
       .replace(/\\/g, '')
       .replace(/{{\s?(.*?)\s?}}/g, function (str, match) {
-        console.log(match);
         var hasFilters = match.split(/\|/);
         if (hasFilters.length > 1) {
           return self.applyFilters(self.getValue(data, hasFilters.shift()), hasFilters);
@@ -121,23 +109,116 @@
     return this.$template;
   };
 
-  //
+  /**
+   * Init current photosets
+   */
+  [].forEach.call(document.querySelectorAll('article'), bindClick);
+
+  /**
+   * Load photosets
+   */
   var container = document.querySelector('[data-component="home-photosets"]');
-  var photoset = new Component('photoset'),
-    el = photoset.render({
-      photoset: {
-        title: 'Fake photoset',
-        count: 118,
-        date_create: new Date(1985, 9, 15),
-        cover: {
-          getSrc: function (size) {
-            return 'http://i.imgur.com/WAc2uoO.gif';
-          }
-        },
-        getUrl: function () {
-          return 'http://google.com';
-        }
-      }
+  var next = document.querySelector('[data-pagination-next]');
+  if (next) {
+    next.addEventListener('click', function (e) {
+      e.preventDefault();
+      loadPage(this);
     });
-  container.appendChild(el);
+  }
+  var previous = document.querySelector('[data-pagination-previous]');
+  if (previous) {
+    previous.addEventListener('click', function (e) {
+      e.preventDefault();
+      loadPage(this, true);
+    });
+  }
+
+  window.addEventListener('scroll', function (e) {
+    if (!next.parentNode) {
+      return;
+    }
+    var top = $(next).offset().top - 200;
+    if (window.scrollY + window.innerHeight > top) {
+      loadPage(next);
+    }
+  });
+
+  function loadPage (el, newer) {
+    if (el.loading) {
+      return;
+    }
+
+    var ajax = new XMLHttpRequest(),
+      url = newer ?
+        el.dataset.paginationPrevious : el.dataset.paginationNext;
+
+    el.loading = true;
+
+    ajax.open('GET', url, true);
+    ajax.onload = function (e) {
+      el.loading = false;
+      if (200 !== e.target.status) {
+        return;
+      }
+
+      var data;
+
+      try {
+        data = JSON.parse(e.target.responseText);
+      } catch(err) {
+        return;
+      }
+      if (newer && data.previousPage) {
+        el.dataset.paginationPrevious = data.previousPage;
+      } else if (!newer && data.nextPage) {
+        el.dataset.paginationNext = data.nextPage;
+      } else {
+        el.remove();
+      }
+
+      var previous = container.firstChild;
+      data.photosets.forEach(function (photoset) {
+        photoset.date_create = new Date(photoset.date_create);
+        photoset.date_update = new Date(photoset.date_update);
+        photoset.cover.getSrc = function () {
+          return photoset.cover.url_m;
+        };
+        photoset.getUrl = function () {
+          return photoset.date_create.getFullYear() + '/' +
+            pad(photoset.date_create.getMonth() + 1) + '/' +
+            photoset.slug + '.html';
+        };
+        var component = new Component('photoset'),
+          photosetEl = component.render({
+            photoset: photoset
+          });
+        bindClick(photosetEl);
+        if (newer) {
+          container.insertBefore(photosetEl, previous);
+          previous = photosetEl.nextSibling;
+        } else {
+          container.appendChild(photosetEl);
+        }
+      });
+    };
+    ajax.send(null);
+  }
+
+  /**
+   *
+   */
+  // Open photoset on clicking anywhere on article block
+  function bindClick (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.location = this.querySelector('a').getAttribute('href');
+    });
+  }
+
+  function pad (nb) {
+    if (nb < 10) {
+      return '0'+nb;
+    }
+    return nb;
+  }
 })();

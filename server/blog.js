@@ -8,6 +8,9 @@ module.exports = function (app) {
   app.get('/', function (req, res, next) {
     return home(req, res, next, app);
   });
+  app.get('/page-:page.json', function (req, res, next) {
+    return home(req, res, next, app, 'json');
+  });
   app.get('/page-:page', function (req, res, next) {
     return home(req, res, next, app);
   });
@@ -16,7 +19,7 @@ module.exports = function (app) {
   });
 };
 
-function home (req, res, next, app) {
+function home (req, res, next, app, format) {
   var page = req.params.page || 1,
     perPage = 12,
     photosets,
@@ -51,17 +54,36 @@ function home (req, res, next, app) {
     })
     .then(function (_data) {
       data.count = _data;
+      if (page * perPage < data.count) {
+        data.nextPage = '/page-' + (+page+1) + ('json' === format ? '.json' : '');
+      }
+      if (page - 1 > 0) {
+        if (page === 1 && format !== 'json') {
+          data.previousPage = '/';
+        } else {
+          data.previousPage = '/page-' + (+page-1) + ('json' === format ? '.json' : '');
+        }
+      }
       return loadThemeData(app, 'home', data);
     })
     .then(function (_data) {
       data = _.merge(data, _data);
-      res.render(__dirname + '/../themes/' + data.theme + '/views/home', data);
+      if ('json' === format) {
+        res.send(data);
+      } else {
+        res.render(__dirname + '/../themes/' + data.theme + '/views/home', data);
+      }
     })
     .catch(function (err) {
       if (err !== 'redirect') {
-        res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
-          error: err.message || err
-        });
+        console.log(format);
+        if ('json' === format) {
+          res.send(err);
+        } else {
+          res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
+            error: err.message || err
+          });
+        }
       }
     });
 }
