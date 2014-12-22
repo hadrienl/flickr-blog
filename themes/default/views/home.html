@@ -1,17 +1,8 @@
 {% extends 'index.html' %}
 
 {% block foot %}
-<script type="text/javascript">
-  // Open photoset on clicking anywhere on article block
-  (function (els) {
-    [].forEach.call(els, function (el) {
-      el.addEventListener('click', function (e) {
-        e.preventDefault();
-        window.location = this.querySelector('a').getAttribute('href');
-      });
-    });
-  })(document.querySelectorAll('article'));
-</script>
+<script src="/components/php-date-formatter/js/php-date-formatter.min.js"></script>
+<script src="/scripts/feed.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -38,32 +29,42 @@
         href="{% if page - 1 == 0 %}/{% else %}/page-{{ page - 1 }}{% endif %}">Previous</a>
     </p>
     {% endif %}
-    {% for photoset in photosets %}
-    <article
-      class="column small-12 medium-6 large-4 home-photoset">
-      <div
-        class="cover"
-        style="background-image: url('{{ photoset.cover.getSrc('m') }}')"></div>
-      <p
-        class="home-photoset-date">
-        <time
-          datetime="{{ photoset.date_create }}">
-          {{ photoset.date_create|date('d M') }} {{ photoset.photos.length }}
-        </time>
-      </p>
-      <div
-        class="home-photoset-details">
-        <h2
-          class="home-photoset-title">
-          <a href="{{ photoset.getUrl() }}">
-            {{ photoset.title }}
-          </a>
-        </h2>
+    <div data-component="home-photosets">
+      {% for photoset in photosets %}
+      <article
+        class="column small-12 medium-6 large-4 home-photoset"
+        data-component="photoset">
         <div
-          class="home-photoset-count">{{ photoset.count }} photos</div>
-      </div>
-    </article>
-    {% endfor %}
+          class="cover"
+          style="background-image: url('{{ photoset.cover.getSrc('m') }}')"
+          data-component-attribute-style="background-image: url('\{\{ photoset.cover.getSrc('m') \}\}')"></div>
+        <p
+          class="home-photoset-date">
+          <time
+            datetime="{{ photoset.date_create }}"
+            data-component-attribute-datetime="\{\{ photoset.date_create \}\}"
+            data-component-value="\{\{ photoset.date_create|date('d M') \}\}">
+            {{ photoset.date_create|date('d M') }}
+          </time>
+        </p>
+        <div
+          class="home-photoset-details">
+          <h2
+            class="home-photoset-title">
+            <a
+              href="{{ photoset.getUrl() }}"
+              data-component-attribute-href="\{\{ photoset.getUrl() \}\}"
+              data-component-value="\{\{ photoset.title \}\}">
+              {{ photoset.title }}
+            </a>
+          </h2>
+          <div
+            class="home-photoset-count"
+            data-component-value="\{\{ photoset.count \}\} photos">{{ photoset.count }} photos</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
     {% if page * perPage < count %}
     <p
       class="column small-12 next">
