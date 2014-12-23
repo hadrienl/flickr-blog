@@ -27,7 +27,6 @@ function reveal(bottom) {
 }
 
 function createImg(span) {
-  console.log(span.dataset.src);
   var img = new Image();
 
   img.setAttribute('src', span.dataset.src);
