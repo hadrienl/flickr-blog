@@ -2,8 +2,7 @@
 'use strict';
 document.body.className += ' js';
 
-var container = document.querySelector('.main-section'),
-  images = document.querySelectorAll('span[data-src]'),
+var images = document.querySelectorAll('span[data-src]'),
   sorted = {};
 
 [].forEach.call(images, function (i) {
@@ -14,8 +13,8 @@ var container = document.querySelector('.main-section'),
   }
   sorted[top].push(i);
 });
-container.addEventListener('scroll', function (e) {
-  reveal(e.target.scrollTop + window.innerHeight);
+window.addEventListener('scroll', function (e) {
+  reveal(window.scrollY + window.innerHeight);
 });
 
 function reveal(bottom) {

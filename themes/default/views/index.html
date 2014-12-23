@@ -9,15 +9,18 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-  {% if photoset.cover %}
   <div
-    class="photoset-cover"
-    style="background-image: url('{{ photoset.cover.url_m }}');"></div>
-  {% endif %}
-  {% block body %}{% endblock %}
-  <footer>
-    <p>Generated with <a href="https://github.com/hadrienl/flickr-blog">FlickrBlog</a> by <a href="http://hadrien.eu">Hadrien.eu</a></p>
-  </footer>
+    class="main-section">
+    {% if photoset.cover %}
+    <div
+      class="photoset-cover"
+      style="background-image: url('{{ photoset.cover.url_m }}');"></div>
+    {% endif %}
+    {% block body %}{% endblock %}
+    <footer>
+      <p>Generated with <a href="https://github.com/hadrienl/flickr-blog">FlickrBlog</a> by <a href="http://hadrien.eu">Hadrien.eu</a></p>
+    </footer>
+  </div>
   
   <script src="/components/jquery/dist/jquery.min.js"></script>
   <script src="/components/foundation/js/foundation.min.js"></script>

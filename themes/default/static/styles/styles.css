@@ -3,7 +3,7 @@ body {
   background: #eee;
 }
 .photoset-cover {
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100%;
   background-size: 100%;
@@ -13,50 +13,8 @@ body {
   filter: blur(10px); 
 }
 
-.tab-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  background: transparent;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.50)), to(rgba(0, 0, 0, 0.80)));
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
-  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
-  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
-  background-image: linear-gradient(top, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.80));
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#000000', EndColorStr='#000000');
-}
-.tab-bar a {
-  color: white;
-}
-.main-section {
-  overflow: auto;
-  height: 100vh;
-  padding-top: 2.8125rem;
-  -webkit-overflow-scrolling: touch;
-}
 header {
   overflow: hidden;
-}
-.breadcrumbs {
-  background: none;
-  border: none;
-  white-space: nowrap;
-  padding: 0;
-  overflow: auto;
-  text-align: left;
-  -webkit-overflow-scrolling: touch;
-}
-.breadcrumbs a {
-  font-size: 1em;
-  line-height: 1.8em;
-  float: none;
-  display: inline-block;
-}
-.breadcrumbs > *.current {
-  color: white;
 }
 
 /* Home */
