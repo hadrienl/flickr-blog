@@ -65,7 +65,8 @@ function getNavigation (date, older) {
     .PhotoSet
     .find({
       where: ['date_create ' + (older ? '<' : '>') + ' ?', date],
-      limit: 1
+      limit: 1,
+      order: 'date_create ' + (older ? 'DESC' : 'ASC')
     })
     .then(function (photoset) {
       if (photoset) {
