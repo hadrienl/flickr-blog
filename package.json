@@ -23,6 +23,7 @@
     "html-entities": "~1.1.1",
     "body-parser": "~1.9.3",
     "lodash": "~2.4.1",
-    "slugify": "~0.1.0"
+    "slugify": "~0.1.0",
+    "rss": "~1.1.1"
   }
 }

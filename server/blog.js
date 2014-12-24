@@ -4,7 +4,9 @@ var database = require('../core/database'),
   _ = require('lodash');
 
 module.exports = function (app) {
-  var photosets;
+  app.get('/rss', function (req, res, next) {
+    return rss(req, res, next, app);
+  });
   app.get('/', function (req, res, next) {
     return home(req, res, next, app);
   });
@@ -140,6 +142,58 @@ function page (req, res, next, app) {
           error: err.message || err
         });
       }
+    });
+}
+
+function rss (req, res) {
+  var data = {};
+
+  fetchData()
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      return PhotoSet
+        .getAll({
+          page: 1,
+          perPage: 10
+        });
+    })
+    .then(function (_data) {
+      data.photosets = _data;
+      return q.all(data.photosets.map(function (photoset) {
+        return photoset
+          .getCover()
+          .then(function (cover) {
+            photoset.cover = cover;
+            return photoset;
+          });
+      }));
+    })
+    .then(function (_data) {
+      data = _.merge(data, _data);
+      // XML
+      var RSS = require('rss');
+      var feed = new RSS({
+        title: data.siteTitle,
+        generator: 'FlickrBlog',
+        feed_url: data.siteUrl + '/rss',
+        site_url: data.siteUrl,
+        pubDate: data.photosets[0].date_create
+      });
+      data.photosets.forEach(function (photoset) {
+        feed.item({
+          title: photoset.title,
+          description: photoset.description,
+          url: data.siteUrl + photoset.getUrl(),
+          date: photoset.date_create,
+          enclosure: {
+            url: photoset.cover.getSrc()
+          }
+        });
+      });
+      res.send(feed.xml({ indent: true }));
+    })
+    .catch(function (err) {
+      res.status(500).send(err.message);
     });
 }
 
