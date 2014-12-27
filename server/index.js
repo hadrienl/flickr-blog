@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./auth')(app);
-require('./blog')(app);
 require('./settings')(app);
+require('./blog')(app);
 
 function init () {
   var server = app.listen(config.server.port, function () {

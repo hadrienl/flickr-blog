@@ -82,7 +82,6 @@ function home (req, res, next, app, format) {
     })
     .catch(function (err) {
       if (err !== 'redirect') {
-        console.log(format);
         if ('json' === format) {
           res.send(err);
         } else {
@@ -223,7 +222,6 @@ function staticFiles (req, res, next) {
       return express.static(path)(req, res, next);
     })
     .catch(function (err) {
-      console.log(err);
       next();
     });
 }
@@ -235,7 +233,7 @@ function getTheme () {
     .Config
     .get('theme')
     .then(function (_data) {
-      deferred.resolve(data || 'default');
+      deferred.resolve(_data || 'default');
     })
     .catch(function () {
       deferred.resolve('default');

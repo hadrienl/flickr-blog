@@ -28,13 +28,12 @@ module.exports = function (sequelize) {
 
     Config
       .find({ where:  {label: label} })
-        .complete(function (err, config) {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            deferred.resolve(config && config.value);
-          }
-        });
+      .then(function (data) {
+        deferred.resolve(data ? data.value : '');
+      })
+      .catch(function (err) {
+        deferred.reject(err);
+      });
 
     return deferred.promise;
   };

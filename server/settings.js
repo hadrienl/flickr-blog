@@ -3,7 +3,8 @@ var auth = require('./auth').middleware,
   database = require('../core/database'),
   config = require('../config.json'),
   sync = require('../core/sync'),
-  q = require('q');
+  q = require('q'),
+  express = require('express');
 
 module.exports = function (app) {
   var Config,
@@ -17,24 +18,8 @@ module.exports = function (app) {
   app.get('/settings', auth, function (req, res) {
     var collections,
       config = {};
-
     q.all([
-        flickr
-          .client()
-          .then(function (client) {
-            return client.getCollectionData();
-          })
-          .then(function (data) {
-            return data.map(function (collection) {
-              return {
-                id: collection.id,
-                title: collection.title,
-                description: collection.description,
-                photosets: collection.set.length,
-                picture: collection.iconsmall
-              };
-            });
-          }),
+        getCollections(),
         Config
           .get('url'),
         Config
@@ -42,7 +27,9 @@ module.exports = function (app) {
         Config
           .get('coverTag'),
         Config
-          .get('siteTitle')
+          .get('siteTitle'),
+        Config
+          .get('theme')
       ])
       .then(function (data) {
         collections = data[0];
@@ -50,6 +37,7 @@ module.exports = function (app) {
         config.collectionId = data[2];
         config.coverTag = data[3];
         config.siteTitle = data[4];
+        config.theme = data[5];
         res.render('admin/settings', {
           user: req.user,
           config: config,
@@ -57,7 +45,7 @@ module.exports = function (app) {
         });
       })
       .catch(function (err) {
-        res.render('error', {
+        res.render('admin/error', {
           error: err.message || err
         });
       });
@@ -68,7 +56,8 @@ module.exports = function (app) {
         url: req.body.url,
         collectionId: req.body.collectionId,
         coverTag: req.body.coverTag,
-        siteTitle: req.body.siteTitle
+        siteTitle: req.body.siteTitle,
+        theme: req.body.theme
       })
     .then(function () {
       flickr
@@ -92,4 +81,32 @@ module.exports = function (app) {
   app.get('/settings/syncing', auth, function (req, res) {
     res.send({syncing: syncing});
   });
+
+  app.use(express.static(__dirname + '/static'));
+
+  function getCollections () {
+    var deferred = q.defer();
+
+    flickr
+      .client()
+      .then(function (client) {
+        return client.getCollectionData();
+      })
+      .then(function (data) {
+        deferred.resolve(data.map(function (collection) {
+          return {
+            id: collection.id,
+            title: collection.title,
+            description: collection.description,
+            photosets: collection.set.length,
+            picture: collection.iconsmall
+          };
+        }));
+      })
+      .catch(function (err) {
+        deferred.reject(err);
+      });
+
+    return deferred.promise;
+  }
 };
