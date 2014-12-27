@@ -19,9 +19,9 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require('./auth')(app);
-require('./settings')(app);
-require('./blog')(app);
+require('./routes/auth')(app);
+require('./routes/settings')(app);
+require('./routes/blog')(app);
 
 function init () {
   var server = app.listen(config.server.port, function () {

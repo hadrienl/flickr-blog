@@ -1,5 +1,5 @@
-var database = require('../core/database'),
-  PhotoSet = require('./viewModels/photoset.js'),
+var database = require('../../core/database'),
+  PhotoSet = require('../viewModels/photoset.js'),
   fs = require('fs'),
   q = require('q'),
   express = require('express'),

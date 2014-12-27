@@ -49,6 +49,16 @@
 
   <div>
     <label>Choose a theme</label>
+    <select
+      name="theme">
+      {% for theme in themes %}
+      <option
+        value="{{ theme }}"
+        {% if theme == config.theme %}selected{% endif %}>
+        {{ theme }}
+      </option>
+      {% endfor %}
+    </select>
     <input
       type="text"
       name="theme"
