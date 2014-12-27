@@ -1,9 +1,13 @@
 var database = require('../core/database'),
   PhotoSet = require('./viewModels/photoset.js'),
+  fs = require('fs'),
   q = require('q'),
+  express = require('express'),
   _ = require('lodash');
 
 module.exports = function (app) {
+  app.use(staticFiles);
+
   app.get('/rss', function (req, res, next) {
     return rss(req, res, next, app);
   });
@@ -197,6 +201,48 @@ function rss (req, res) {
     });
 }
 
+function staticFiles (req, res, next) {
+  var theme, path;
+  getTheme()
+    .then(function (_theme) {
+      theme = _theme;
+      path = __dirname + '/../themes/' + theme + '/static/';
+
+      var deferred = q.defer();
+      fs.exists(path + req.url, function (exists) {
+        if (exists) {
+          deferred.resolve(true);
+        } else {
+          deferred.reject(false);
+        }
+      });
+
+      return deferred.promise;
+    })
+    .then(function () {
+      return express.static(path)(req, res, next);
+    })
+    .catch(function (err) {
+      console.log(err);
+      next();
+    });
+}
+
+function getTheme () {
+  var deferred = q.defer();
+
+  database
+    .Config
+    .get('theme')
+    .then(function (_data) {
+      deferred.resolve(data || 'default');
+    })
+    .catch(function () {
+      deferred.resolve('default');
+    });
+  return deferred.promise;
+}
+
 /**
  * Fetch common data for every pages
  */
@@ -209,12 +255,10 @@ function fetchData () {
     .get('siteTitle')
     .then(function (siteTitle) {
       data.siteTitle = siteTitle;
-      return database
-        .Config
-        .get('theme');
+      return getTheme();
     })
     .then(function (theme) {
-      data.theme = theme || 'default';
+      data.theme = theme;
       return database
         .Config
         .get('url');
@@ -251,7 +295,6 @@ function loadThemeData (app, type, data) {
       return q.resolve(themeData);
     }
   } catch (e) {
-    console.log(e);
     return q.resolve(data);
   }
 }

@@ -23,9 +23,6 @@ require('./auth')(app);
 require('./blog')(app);
 require('./settings')(app);
 
-// TODO find a way to serve all themes static files
-app.use(express.static(__dirname + '/../themes/default/static'));
-
 function init () {
   var server = app.listen(config.server.port, function () {
     var host = server.address().address;
