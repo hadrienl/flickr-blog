@@ -8,6 +8,7 @@ function Photo (data) {
 
   Object.defineProperties(this, {
     orientation: {
+      enumerable: true,
       get: function () {
         if (this.width >= this.height) {
           return 'landscape';
@@ -16,11 +17,13 @@ function Photo (data) {
       }
     },
     landscape: {
+      enumerable: true,
       get: function () {
         return this.orientation === 'landscape';
       }
     },
     portrait: {
+      enumerable: true,
       get: function () {
         return this.orientation === 'portrait';
       }
