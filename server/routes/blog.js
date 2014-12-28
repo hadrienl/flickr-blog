@@ -107,7 +107,7 @@ function page (req, res, next, app) {
     .then(function (_data) {
       data = _.merge(data, _data);
       return PhotoSet
-        .getFromSlug(slug);
+        .getFromSlug(slug, year, month);
     })
     .then(function (_data) {
       data.photoset = _data;

@@ -1,7 +1,8 @@
 var database = require('../../core/database'),
   q = require('q'),
   ViewModel = require('./view-model'),
-  Photo = require('./photo');
+  Photo = require('./photo'),
+  _ = require('lodash');
 
 function PhotoSet (data) {
   ViewModel.apply(this, arguments);
@@ -159,22 +160,36 @@ PhotoSet.getAll = function (config) {
     });
 };
 
-PhotoSet.getFromSlug = function (slug) {
+PhotoSet.getFromSlug = function (slug, year, month) {
   var deferred = q.defer();
 
   database
     .models
     .PhotoSet
-    .find({
+    .findAll({
       where: {
         slug: slug
       }
     })
     .then(function (data) {
-      if (data) {
-        deferred.resolve(new PhotoSet(data));
-      } else {
+      if (!data || !data.length) {
         deferred.reject('Photoset not found');
+      }
+      if (data.length === 1) {
+        deferred.resolve(new PhotoSet(data[0]));
+      } else {
+        var found = false;
+        _.some(data, function (photoset) {
+          if (photoset.date_create.getFullYear() === year &&
+              photoset.date_create.getMonth() + 1 === month) {
+            deferred.resolve(new PhotoSet(photoset));
+          found = true;
+            return true;
+          }
+        });
+        if (!found) {
+          deferred.resolve(new PhotoSet(data[0]));
+        }
       }
     })
     .catch(function (err) {
