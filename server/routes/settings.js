@@ -18,6 +18,7 @@ module.exports = function (app) {
 
   app.get('/settings', auth, function (req, res) {
     var collections,
+      themes,
       config = {};
     q.all([
         getCollections(),
@@ -36,7 +37,6 @@ module.exports = function (app) {
       .then(function (data) {
         collections = data[0];
         themes = data[1];
-        console.log(themes);
         config.url = data[2];
         config.collectionId = data[3];
         config.coverTag = data[4];

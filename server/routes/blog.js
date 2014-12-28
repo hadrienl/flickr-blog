@@ -77,7 +77,7 @@ function home (req, res, next, app, format) {
       if ('json' === format) {
         res.send(data);
       } else {
-        res.render(__dirname + '/../themes/' + data.theme + '/views/home', data);
+        res.render(__dirname + '/../../themes/' + data.theme + '/views/home', data);
       }
     })
     .catch(function (err) {
@@ -85,7 +85,7 @@ function home (req, res, next, app, format) {
         if ('json' === format) {
           res.send(err);
         } else {
-          res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
+          res.render(__dirname + '/../../themes/' + data.theme + '/views/error', {
             error: err.message || err
           });
         }
@@ -137,11 +137,11 @@ function page (req, res, next, app) {
     })
     .then(function (_data) {
       data = _.merge(data, _data);
-      res.render(__dirname + '/../themes/' + data.theme + '/views/photoset', data);
+      res.render(__dirname + '/../../themes/' + data.theme + '/views/photoset', data);
     })
     .catch(function (err) {
       if (err !== 'redirect') {
-        res.render(__dirname + '/../themes/' + data.theme + '/views/error', {
+        res.render(__dirname + '/../../themes/' + data.theme + '/views/error', {
           error: err.message || err
         });
       }
@@ -205,7 +205,7 @@ function staticFiles (req, res, next) {
   getTheme()
     .then(function (_theme) {
       theme = _theme;
-      path = __dirname + '/../themes/' + theme + '/static/';
+      path = __dirname + '/../../themes/' + theme + '/static/';
 
       var deferred = q.defer();
       fs.exists(path + req.url, function (exists) {
@@ -282,7 +282,7 @@ function fetchData () {
 
 function loadThemeData (app, type, data) {
   try {
-    var themeEngine = require('../themes/' + data.theme);
+    var themeEngine = require('../../themes/' + data.theme);
     if (!themeEngine[type]) {
       return q.resolve(data);
     }

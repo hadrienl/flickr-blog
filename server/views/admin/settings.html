@@ -53,17 +53,12 @@
       name="theme">
       {% for theme in themes %}
       <option
-        value="{{ theme }}"
-        {% if theme == config.theme %}selected{% endif %}>
-        {{ theme }}
+        value="{{ theme.name }}"
+        {% if theme.name == config.theme %}selected{% endif %}>
+        {{ theme.name}} ({{ theme.description }})
       </option>
       {% endfor %}
     </select>
-    <input
-      type="text"
-      name="theme"
-      placeholder="default"
-      value="{{ config.theme }}">
   </div>
 
   <button
