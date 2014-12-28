@@ -1,8 +1,8 @@
 var q = require('q'),
   passport = require('passport'),
   FlickrStrategy = require('passport-flickr').Strategy,
-  config = require('../config.json'),
-  database = require('../core/database');
+  config = require('../../config.json'),
+  database = require('../../core/database');
 
 passport.use(new FlickrStrategy({
     consumerKey: config.flickr.apiKey,

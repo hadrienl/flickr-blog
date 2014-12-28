@@ -6,6 +6,15 @@
   method="post"
   action="/settings">
   <div>
+    <label>Set the title of your blog</label>
+    <input
+      type="text"
+      name="siteTitle"
+      placeholder="My beautiful blog"
+      value="{{ config.siteTitle }}">
+  </div>
+
+  <div>
     <label>Set the url of your blog</label>
     <input
       type="url"
@@ -36,6 +45,20 @@
       name="coverTag"
       placeholder="cover"
       value="{{ config.coverTag }}">
+  </div>
+
+  <div>
+    <label>Choose a theme</label>
+    <select
+      name="theme">
+      {% for theme in themes %}
+      <option
+        value="{{ theme.name }}"
+        {% if theme.name == config.theme %}selected{% endif %}>
+        {{ theme.name}} ({{ theme.description }})
+      </option>
+      {% endfor %}
+    </select>
   </div>
 
   <button

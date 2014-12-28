@@ -91,11 +91,12 @@ function extractDateFromTitle(data) {
   data.date_create = date;
 }
 
-function slugify (string) {
-  return string
+function slugify (str) {
+  return require('slugify')(str)
     .toLowerCase()
-    .replace(/[^\w]+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/\W/g, '-')
+    .replace(/\-+/g, '-')
+    .replace(/(^\-)|(\-$)/, '');
 }
 
 function cleanDescription (description) {

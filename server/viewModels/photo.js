@@ -1,9 +1,34 @@
 var database = require('../../core/database'),
   q = require('q'),
-  ViewModel = require('./view-model');
+  ViewModel = require('./view-model'),
+  _ = require('lodash');
 
 function Photo (data) {
   ViewModel.apply(this, arguments);
+
+  Object.defineProperties(this, {
+    orientation: {
+      enumerable: true,
+      get: function () {
+        if (this.width >= this.height) {
+          return 'landscape';
+        }
+        return 'portrait';
+      }
+    },
+    landscape: {
+      enumerable: true,
+      get: function () {
+        return this.orientation === 'landscape';
+      }
+    },
+    portrait: {
+      enumerable: true,
+      get: function () {
+        return this.orientation === 'portrait';
+      }
+    }
+  });
 }
 
 Photo.prototype.getSrc = function (size) {

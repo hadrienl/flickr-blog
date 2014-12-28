@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install; node ."
+    "start": "git submodule update --init; cd themes/default; bower install; npm install; cd ../..; npm install; node ."
   },
   "author": "Hadrien Lanneau",
   "license": "BSD-2-Clause",
@@ -21,6 +21,9 @@
     "swig": "~1.4.2",
     "marked": "~0.3.2",
     "html-entities": "~1.1.1",
-    "body-parser": "~1.9.3"
+    "body-parser": "~1.9.3",
+    "lodash": "~2.4.1",
+    "slugify": "~0.1.0",
+    "rss": "~1.1.1"
   }
 }
