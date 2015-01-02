@@ -1,0 +1,57 @@
+<link rel="import"
+  href="/settings/bower_components/polymer/polymer.html">
+<link rel="import"
+  href="/settings/bower_components/paper-input/paper-input.html">
+<link rel="import"
+  href="/settings/bower_components/paper-button/paper-button.html">
+<link rel="import"
+  href="/settings/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import"
+  href="/settings/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import"
+  href="/settings/bower_components/core-menu/core-menu.html">
+<link rel="import"
+  href="/settings/bower_components/paper-item/paper-item.html">
+
+<polymer-element
+  name="settings-content">
+  <template>
+    <style>
+      fieldset {
+        border: none;
+      }
+      paper-input {
+        width: 100%;
+      }
+    </style>
+    <form>
+      <fieldset>
+        <paper-dropdown-menu
+          label="Choose a collection to sync from your Flickr account">
+          <paper-dropdown class="dropdown">
+              <core-menu class="menu">
+                <template repeat="{{ collection in collections }}">
+                  <paper-item
+                    value="{{ collection }}">{{ collection }}</paper-item>
+                </template>
+              </core-menu>
+          </paper-dropdown>
+      </paper-dropdown-menu>
+
+        <paper-input
+          label="Choose a #tag to select your photosets covers"
+          floatingLabel="true"
+          placeholder="cover"
+          required></paper-input>
+      </fieldset>
+      <fieldset>
+        <paper-button
+          role="button"
+          id="save">
+          <core-icon icon="check"></core-icon> Save
+        </paper-button>
+      </fieldset>
+    </form>
+  </template>
+  <script src="settings-content.js"></script>
+</polymer-element>

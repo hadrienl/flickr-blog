@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./routes/auth')(app);
-require('./routes/settings')(app);
+require('./settings')(app);
 require('./routes/blog')(app);
 
 function init () {

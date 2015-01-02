@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FlickrBlog settings</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes"
+  <base href="/settings/">
+  <script src="/settings/bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <link rel="import"
+    href="/settings/bower_components/app-router/app-router.html">
+  <link rel="import"
+    href="/settings/bower_components/pushstate-anchor/pushstate-anchor.html">
+  
+  <link rel="import"
+    href="/settings/bower_components/core-scaffold/core-scaffold.html">
+  <link rel="import"
+    href="/settings/bower_components/core-header-panel/core-header-panel.html">
+  <link rel="import"
+    href="/settings/bower_components/core-menu/core-menu.html">
+  <link rel="import"
+    href="/settings/bower_components/core-item/core-item.html">
+
+  <link rel="import"
+    href="/settings/components/settings-title/settings-title.html">
+
+  <link rel="stylesheet"
+    href="/settings/styles/styles.css">
+</head>
+<body unresolved>
+
+<core-scaffold>
+  <core-header-panel navigation flex mode="seamed">
+    <core-toolbar>
+      <a
+        href="/"
+        class="title">FlickrBlog</a>
+    </core-toolbar>
+    <core-menu
+      theme="core-light-theme">
+      <core-item
+        icon="settings"
+        label="Settings"
+        selected="0">
+        <a is="pushstate-anchor" href="/settings/"></a>
+      </core-item>
+      <core-item
+        icon="content-copy"
+        label="Content">
+        <a is="pushstate-anchor" href="/settings/content.html"></a>
+      </core-item>
+      <core-item
+        icon="gesture"
+        label="Design">
+        <a is="pushstate-anchor" href="/settings/design.html"></a>
+      </core-item>
+    </core-menu>
+  </core-header-panel>
+  <div tool>
+    <settings-title></settings-title>
+  </div>
+  <app-router>
+    <app-route
+      path="/settings/"
+      import="/settings/components/settings-main/settings-main.html">
+    </app-route>
+
+    <app-route
+      path="/settings/content.html"
+      import="/settings/components/settings-content/settings-content.html">
+    </app-route>
+
+    <app-route
+      path="/settings/design.html"
+      import="/settings/components/settings-design/settings-design.html">
+    </app-route>
+
+    <app-route
+      path="*"
+      import="/settings/components/page-not-found/page-not-found.html">
+    </app-route>
+  </app-router>
+
+</core-scaffold>
+<script>
+  (function () {
+    'use strict';
+    var menu = document.querySelector('core-menu'),
+      links = menu.querySelectorAll('a'),
+      currentHref = window.location.pathname;
+    [].forEach.call(links, function (a, k) {
+      if (currentHref === a.getAttribute('href')) {
+        menu.selected = k;
+      }
+    });
+  })();
+</script>
+</body>
+</html>

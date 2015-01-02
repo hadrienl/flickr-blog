@@ -1,0 +1,42 @@
+<link rel="import"
+  href="/settings/bower_components/polymer/polymer.html">
+<link rel="import"
+  href="/settings/bower_components/paper-input/paper-input.html">
+<link rel="import"
+  href="/settings/bower_components/paper-button/paper-button.html">
+
+<polymer-element
+  name="settings-main">
+  <template>
+    <style>
+      fieldset {
+        border: none;
+      }
+      paper-input {
+        width: 100%;
+      }
+    </style>
+    <form>
+      <fieldset>
+        <paper-input
+          label="Set you blog title"
+          floatingLabel="true"
+          required></paper-input>
+
+        <paper-input
+          label="Set your blog URL"
+          floatingLabel="true"
+          required></paper-input>
+      </fieldset>
+      <fieldset>
+        <paper-button
+          role="button">
+          <core-icon icon="check"></core-icon> Save
+        </paper-button>
+      </fieldset>
+    </form>
+  </template>
+  <script>
+    Polymer({})
+  </script>
+</polymer-element>

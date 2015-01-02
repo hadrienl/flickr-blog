@@ -1,0 +1,17 @@
+{
+  "node": true,
+  "camelcase": true,
+  "indent": 2,
+  "newcap": true,
+  "trailing": true,
+  "maxlen": 110,
+  "white": true,
+  "globalstrict": true,
+  "browser": true,
+  "esnext": true,
+  "globals": {
+    "window": false,
+    "Polymer": false,
+    "require": false
+  }
+}

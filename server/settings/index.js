@@ -1,3 +1,4 @@
+'use strict';
 var auth = require('../routes/auth').middleware,
   flickr = require('../../core/flickr'),
   database = require('../../core/database'),
@@ -16,7 +17,7 @@ module.exports = function (app) {
       Config = database.Config;
     });
 
-  app.get('/settings', auth, function (req, res) {
+  /*app.get('/settings', auth, function (req, res) {
     var collections,
       themes,
       config = {};
@@ -54,9 +55,9 @@ module.exports = function (app) {
           error: err.message || err
         });
       });
-  });
+  });*/
 
-  app.post('/settings', auth, function (req, res) {
+  /*app.post('/settings', auth, function (req, res) {
     Config.set({
         url: req.body.url,
         collectionId: req.body.collectionId,
@@ -81,13 +82,21 @@ module.exports = function (app) {
         error: err.message || err
       });
     });
-  });
+  });*/
 
-  app.get('/settings/syncing', auth, function (req, res) {
+  /*app.get('/settings/syncing', auth, function (req, res) {
     res.send({syncing: syncing});
+  });*/
+  app.get(/^\/settings$/, function (req, res) {
+    res.redirect('/settings/');
   });
-
-  app.use(express.static(__dirname + '/static'));
+  app.get('/settings/*', function (req, res, next) {
+    req.url = req.url.replace(/^\/settings/, '');
+    if (req.url.match(/^\/[\w]+\.html$/)) {
+      req.url = '/index.html';
+    }
+    next();
+  }, express.static(__dirname + '/views'));
 
   function getCollections () {
     var deferred = q.defer();
