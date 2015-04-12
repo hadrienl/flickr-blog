@@ -46,7 +46,7 @@ module.exports = function (sequelize) {
           photoset.save()
           .then(function (photoset) {
             photosetEntity = photoset;
-            return collection.addPhotoSet(photoset);
+            return collection && collection.addPhotoSet(photoset);
           })
           .then(function (data) {
             deferred.resolve(photosetEntity);

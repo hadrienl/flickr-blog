@@ -34,6 +34,19 @@ Client.prototype.getCollectionData = function (id) {
   return deferred.promise;
 };
 
+Client.prototype.getPhotosetsList = function () {
+  return q.ninvoke(
+      this.client,
+      'executeAPIRequest',
+      'flickr.photosets.getList',
+      null,
+      true
+    )
+  .then(function (data) {
+    return data.photosets.photoset;
+  });
+};
+
 Client.prototype.getPhotoSetData = function (id) {
   var deferred = q.defer();
 
