@@ -19,7 +19,7 @@ var core = {
         function startSync() {
           sync(client);
         }
-        syncLoop = setInterval(startSync, 5*60*1000);
+        syncLoop = setInterval(startSync, 60*1000);
         startSync();
       });
   },
