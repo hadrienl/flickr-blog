@@ -17,58 +17,13 @@ module.exports = function () {
 
   syncing = true;
 
-  // Fetch collection
-  database
-    .Config
-    .get('collectionId')
-    .then(function (data) {
-      collectionId = data;
-      if (!collectionId) {
-        throw new Error('No collectionId saved');
-      }
-      return flickr
-        .client();
+  fetchPhotosets()
+    .then(function (photosets) {
+      return filterPhotosets(photosets);
     })
-    .then(function (data) {
-      client = data;
-      return client.getCollectionData(collectionId);
-    })
-    .then(function (data) {
-      collectionData = data;
-      // Sync collection
-      return database.Collection.saveFromFlickr(collectionData);
-    })
-    .then(function (collection) {
-      return q.all(collectionData.set.map(function (set) {
-        var deferred = q.defer(),
-          photosetEntity;
-        // fetch photosets
-        client.getPhotoSetData(set.id)
-          .then(function (photosetData) {
-            // Sync photosets
-            return database.PhotoSet.saveFromFlickr(photosetData, collection);
-          })
-          .then(function (photoset) {
-            photosetEntity = photoset;
-            // Fetch photos
-            return client.getPhotosFromPhotoSet(photoset.orig_id);
-          })
-          .then(function (photosData) {
-            var pos = 0;
-            return q.all(photosData.map(function (photo) {
-              // Sync photo
-              photo.position = pos++;
-              return database.Photo.saveFromFlick(photo, photosetEntity);
-            }));
-          })
-          .then(function () {
-            deferred.resolve();
-          })
-          .catch(function (err) {
-            deferred.reject(err);
-          });
-
-        return deferred.promise;
+    .then(function (photosets) {
+      return q.all(photosets.map(function (photoset) {
+        return fetchPhotoset(photoset);
       }));
     })
     .then(function () {
@@ -85,3 +40,65 @@ module.exports = function () {
 
   return deferred.promise;
 };
+
+function fetchPhotosets () {
+  return flickr
+    .client()
+    .then(function (_client) {
+      client = _client;
+      return client.getPhotosetsList();
+    });
+}
+
+function filterPhotosets (photosets) {
+  return database
+    .Config
+    .get('photosetFilter')
+    .then(function (data) {
+      var filter = data || /^\[blog\]/;
+      return photosets.filter(function (photoset) {
+        return photoset.title._content.match(filter);
+      });
+    });
+}
+
+function fetchPhotoset (photoset) {
+  // fetch photosets
+  return client
+    .getPhotoSetData(photoset.id)
+    .then(function (photosetData) {
+      // Sync photosets
+      return database.PhotoSet.saveFromFlickr(photosetData);
+    })
+    .then(function (photoset) {
+      photosetEntity = photoset;
+      // Fetch photos
+      return client.getPhotosFromPhotoSet(photoset.orig_id);
+    })
+    .then(function (photosData) {
+      var pos = 0;
+      return q.all(photosData.map(function (photo) {
+        // Sync photo
+        photo.position = pos++;
+        return database.Photo.saveFromFlick(photo, photosetEntity);
+      }));
+    })
+    .then(function () {
+      log('photoset #' + photoset.id + ' fetched');
+    })
+    .catch(function (err) {
+      log('error on fetching photoset #' + photoset.id + ' data' + err);
+    })
+    .then(function () {
+      return 'OK ' + photoset.id;
+    });
+}
+
+function log(data) {
+  var now = new Date();
+  console.log('[' +
+    now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' +
+    now.getHours() + ':' + now.getMinutes() + '] ',
+    data
+  );
+}
